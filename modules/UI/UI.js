@@ -245,6 +245,7 @@ UI.setLocalRaisedHandStatus
  * Initialize conference UI.
  */
 UI.initConference = function() {
+
     const { getState } = APP.store;
     const { id, name } = getLocalParticipant(getState);
 
@@ -338,15 +339,117 @@ UI.start = function() {
         $('body').addClass('use-new-toolbox');
     }
 
-    interfaceConfig.VERTICAL_FILMSTRIP
-        && $('body').addClass('vertical-filmstrip');
+    if (interfaceConfig.VERTICAL_FILMSTRIP)
+    {
+        $('body').addClass('vertical-filmstrip');
+    }
 
-    document.title = interfaceConfig.APP_NAME;
+    if (interfaceConfig.TILE_FILMSTRIP)
+    {
+        $('body').addClass('tile-filmstrip');
+
+        // This is the largeVideoWithTheBackGround that we don't need
+        $('#largeVideoContainer').hide();
+
+
+        // OnLoad handle LocalVideo and Existing Remote Videos
+        logger.info(`PK: updates on load to create new gridViewContainer`);
+
+        //Create New Grid Container
+        $("#videoconference_page").append(`<div id='gridViewContainer' style='width: 100%; height: 100%'></div>`);
+
+        //copy from one div and puts it to another
+        $("#localVideoContainer").appendTo("#gridViewContainer");
+
+        // appends all remote videos videos
+        $("#filmstripRemoteVideosContainer > span").appendTo("#gridViewContainer");
+
+        //update css grid
+        updateGridView();
+
+
+
+        // move some elements that are required from largeVideoContainer to gridViewContainer
+/*        $('#sharedVideo').appendTo('#gridViewContainer');
+        $('#remoteMessage').appendTo('#gridViewContainer');
+        $('#etherpad').appendTo('#gridViewContainer');
+        $('#remotePresenceMessage').appendTo('#gridViewContainer');
+        $('#remoteConnectionMessage').appendTo('#gridViewContainer');
+        $("#localConnectionMessage").appendTo("#gridViewContainer");*/
+
+    }
 };
+
+
+
+/**
+ *  Functions for Creating an Responsive Grid View
+ * */
+
+const getNumOfVideoCallers = () => {
+
+    const numOfCallers =  $('#gridViewContainer > .videocontainer').length;
+    logger.info(`number of videoCallers is ${numOfCallers}`);
+    return numOfCallers;
+};
+
+// Current Rows
+function calculateCurrentRowSize(numOfVideoCallers) {
+    logger.info(`PK: calculateCurrentRowSize triggered`);
+
+    switch (numOfVideoCallers) {
+        case 1:
+            return "repeat(1,100%)";
+        case 2:
+            return "repeat(2,100%)";
+
+    }
+
+}
+
+// Current Columns
+function calculateCurrentColumnSize(numOfVideoCallers) {
+    logger.info(`PK: calculateCurrentRowSize triggered`);
+
+
+    switch (numOfVideoCallers) {
+        case 1:
+            return "repeat(1,100%)";
+        case 2:
+            return "repeat(2,50%)";
+
+    }
+
+}
+
+// updateGridView updates the Grid
+const updateGridView = () => {
+
+        logger.info(`PK: updateGridView Triggered!`);
+        const numOfVideoCallers = getNumOfVideoCallers();
+
+        logger.info(`PK: currentNumberOfVideoCallers is ${numOfVideoCallers}`);
+
+        $('#gridViewContainer').css({
+            "grid-template-rows": calculateCurrentRowSize(numOfVideoCallers),
+            "grid-template-columns" : calculateCurrentColumnSize(numOfVideoCallers),
+        })
+
+};
+
+
+
+/**
+ *  Listeners for Creating an Responsive Grid View
+ * */
+
+// ON CHANGE EVENT FOR GRID CONTAINER EVENTS WHEN SPANS ARE ENTERED OR REMOVED
+
 
 /**
  * Setup some UI event listeners.
  */
+
 UI.registerListeners
     = () => UIListeners.forEach((value, key) => UI.addListener(key, value));
 
@@ -374,6 +477,28 @@ UI.bindEvents = () => {
             onResize);
 
     $(window).resize(onResize);
+
+
+    /** HAVING TO SYNC THE TWO CONTAINERS
+     *
+     */
+    // removed a new videoContainer
+    $("#filmstripRemoteVideosContainer").on('DOMNodeRemoved', (event) => {
+        logger.info(`PK: ListenerEvent Removed Container Called`);
+
+        $("#gridViewContainer").remove(event.target);
+        updateGridView();
+    });
+
+    // Added a new videoContainer
+    $("#filmstripRemoteVideosContainer").on('DOMNodeInserted', (event) =>
+    {
+
+        logger.info(`PK: ListenerEvent add Container Called`);
+        $(event.target).appendTo("#gridViewContainer");
+        updateGridView();
+    })
+
 };
 
 /**

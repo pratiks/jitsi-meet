@@ -127,6 +127,10 @@ window.JitsiMeetScreenObtainer = {
     }
 };
 
+interfaceConfig.VERTICAL_FILMSTRIP = false;
+interfaceConfig.TILE_FILMSTRIP = true;
+//interfaceConfig.DISABLE_DOMINANT_SPEAKER_INDICATOR = true;
+
 /**
  * Known custom conference commands.
  */
