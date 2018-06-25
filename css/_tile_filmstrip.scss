@@ -8,28 +8,34 @@
     all: unset !important;
 }
 
+.use-new-toolbox {
 
+    all: unset !important;
+}
 
 
 #remoteVideos {
 
+    all: unset;
     display: grid;
-    position: absolute;
-    width: 100%;
+    grid-template-columns: repeat(3,33%);
+    position: unset !important;
+
+    width: 100vw;
+    height: 100vh;
 
     grid-gap: 2px;
     margin: 0;
     //overrides
-    height: 100% !important;
-    transition: none !important;
-    border: none !important;
-    padding-left: 0 !important;
+    border: unset !important;
+     padding-left:unset !important;
+     transition: unset !important;
 
     .videocontainer {
 
         grid-row: span 1;
         grid-column: span 1;
-        position: relative;
+        position: inherit;
     }
 
 

@@ -331,6 +331,7 @@ UI.start = function() {
         $('#videospace').addClass('tile-filmstrip');
         // This is the largeVideoWithTheBackGround ; this also holds the logo
         $('#largeVideoContainer').hide();
+        $('#filmstrip__toolbar').hide();
         updateGridView();
 
 /*
@@ -382,14 +383,16 @@ function calculateCurrentGridLayout(numOfVideoCallers) {
 
     switch (numOfVideoCallers) {
         case 1:
+            //lonelyUserView
             rows = "repeat(1,100%)";
             columns = "repeat(1,100%)";
             logger.info(`Number of users: ${numOfVideoCallers}, setting Grid 1 user view`);
             return {rows, columns};
 
+            // two-user-view
         case 2:
             rows = "repeat(2,100%)";
-            columns = "repeat(2,50%)";
+            columns = "repeat(1,100%)";
             return {rows, columns}
 
     }
@@ -453,22 +456,17 @@ UI.bindEvents = () => {
     /** HAVING TO SYNC THE TWO CONTAINERS
      *
      */
-/*    // removed a new videoContainer
-    $("#filmstripRemoteVideosContainer").on('DOMNodeRemoved', (event) => {
-        logger.info(`PK: ListenerEvent Removed Container Called`);
-
-        $("#gridViewContainer").remove(event.target);
+    // removed a new videoContainer
+    $("#remoteVideos").on('DOMNodeRemoved', (event) => {
         updateGridView();
     });
 
     // Added a new videoContainer
-    $("#filmstripRemoteVideosContainer").on('DOMNodeInserted', (event) =>
+    $("#remoteVideos").on('DOMNodeInserted', (event) =>
     {
 
-        logger.info(`PK: ListenerEvent add Container Called`);
-        $(event.target).appendTo("#gridViewContainer");
         updateGridView();
-    })*/
+    })
 
 
 };
