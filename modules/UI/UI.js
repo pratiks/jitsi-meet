@@ -331,7 +331,7 @@ UI.start = function() {
         $('#videospace').addClass('tile-filmstrip');
         // This is the largeVideoWithTheBackGround ; this also holds the logo
         $('#largeVideoContainer').hide();
-        $('#filmstrip__toolbar').hide();
+        $('#remoteVideos').insertAfter('#videospace');
         updateGridView();
 
 /*
@@ -391,8 +391,8 @@ function calculateCurrentGridLayout(numOfVideoCallers) {
 
             // two-user-view
         case 2:
-            rows = "repeat(2,100%)";
-            columns = "repeat(1,100%)";
+            rows = "repeat(2, 50%)";
+            columns = "repeat(2,50%)";
             return {rows, columns}
 
     }
