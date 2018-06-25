@@ -378,21 +378,23 @@ const getNumOfVideoCallers = () => {
 function calculateCurrentGridLayout(numOfVideoCallers) {
     logger.info(`PK: calculateCurrentRowSize triggered`);
 
-    let rows = "repeat(1,100%)";
-    let columns = "repeat(1,100%)";
+    let rows = "100%";
+    let columns = "100%";
 
     switch (numOfVideoCallers) {
+
+        case 0:
+            // no users view
+            return {rows, columns};
+
         case 1:
-            //lonelyUserView
-            rows = "repeat(1,100%)";
-            columns = "repeat(1,100%)";
-            logger.info(`Number of users: ${numOfVideoCallers}, setting Grid 1 user view`);
+            // lonely users view
             return {rows, columns};
 
             // two-user-view
         case 2:
-            rows = "repeat(2, 50%)";
-            columns = "repeat(2,50%)";
+            rows = "repeat(5,25%)";
+            columns = "repeat(3,33%)";
             return {rows, columns}
 
     }
