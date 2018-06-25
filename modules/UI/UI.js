@@ -326,8 +326,97 @@ UI.start = function() {
 
     $('body').addClass(filmstripTypeClassname);
 
+    if (interfaceConfig.TILE_FILMSTRIP)
+    {
+        $('#videospace').addClass('tile-filmstrip');
+        // This is the largeVideoWithTheBackGround ; this also holds the logo
+        $('#largeVideoContainer').hide();
+        updateGridView();
+
+/*
+
+
+        //update css grid
+        updateGridView();*/
+
+
+
+        // move some elements that are required from largeVideoContainer to gridViewContainer
+        /*        $('#sharedVideo').appendTo('#gridViewContainer');
+                $('#remoteMessage').appendTo('#gridViewContainer');
+                $('#etherpad').appendTo('#gridViewContainer');
+                $('#remotePresenceMessage').appendTo('#gridViewContainer');
+                $('#remoteConnectionMessage').appendTo('#gridViewContainer');
+                $("#localConnectionMessage").appendTo("#gridViewContainer");*/
+
+    }
+
+
     document.title = interfaceConfig.APP_NAME;
 };
+
+
+
+
+/**
+ *  Functions for Creating an Responsive Grid View
+ * */
+
+const getNumOfVideoCallers = () => {
+
+    const localVideo =  $('#filmstripLocalVideoThumbnail > .videocontainer').length;
+    const remoteVideos = $('#filmstripRemoteVideosContainer > .videocontainer').length;
+    const numOfCallers = localVideo + remoteVideos;
+
+
+
+    logger.info(`number of videoCallers is ${numOfCallers}`);
+    return numOfCallers;
+};
+
+function calculateCurrentGridLayout(numOfVideoCallers) {
+    logger.info(`PK: calculateCurrentRowSize triggered`);
+
+    let rows = "repeat(1,100%)";
+    let columns = "repeat(1,100%)";
+
+    switch (numOfVideoCallers) {
+        case 1:
+            rows = "repeat(1,100%)";
+            columns = "repeat(1,100%)";
+            logger.info(`Number of users: ${numOfVideoCallers}, setting Grid 1 user view`);
+            return {rows, columns};
+
+        case 2:
+            rows = "repeat(2,100%)";
+            columns = "repeat(2,50%)";
+            return {rows, columns}
+
+    }
+
+
+}
+
+
+
+
+// updateGridView updates the Grid
+const updateGridView = () => {
+
+    logger.info(`PK: updateGridView Triggered!`);
+    const numOfVideoCallers = getNumOfVideoCallers();
+    logger.info(`PK: currentNumberOfVideoCallers is ${numOfVideoCallers}`);
+    const currentLayout = calculateCurrentGridLayout(numOfVideoCallers);
+
+    $('#remoteVideos').css({
+        "grid-template-rows":currentLayout.rows,
+        "grid-template-columns" : currentLayout.columns,
+    })
+
+};
+
+
+
 
 /**
  * Setup some UI event listeners.
@@ -359,6 +448,29 @@ UI.bindEvents = () => {
             onResize);
 
     $(window).resize(onResize);
+
+
+    /** HAVING TO SYNC THE TWO CONTAINERS
+     *
+     */
+/*    // removed a new videoContainer
+    $("#filmstripRemoteVideosContainer").on('DOMNodeRemoved', (event) => {
+        logger.info(`PK: ListenerEvent Removed Container Called`);
+
+        $("#gridViewContainer").remove(event.target);
+        updateGridView();
+    });
+
+    // Added a new videoContainer
+    $("#filmstripRemoteVideosContainer").on('DOMNodeInserted', (event) =>
+    {
+
+        logger.info(`PK: ListenerEvent add Container Called`);
+        $(event.target).appendTo("#gridViewContainer");
+        updateGridView();
+    })*/
+
+
 };
 
 /**

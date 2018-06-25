@@ -117,6 +117,10 @@ const eventEmitter = new EventEmitter();
 let room;
 let connection;
 
+interfaceConfig.VERTICAL_FILMSTRIP = false;
+interfaceConfig.TILE_FILMSTRIP = true;
+interfaceConfig.DISABLE_VIDEO_BACKGROUND = true;
+
 /*
  * Logic to open a desktop picker put on the window global for
  * lib-jitsi-meet to detect and invoke
