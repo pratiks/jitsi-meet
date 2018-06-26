@@ -332,6 +332,7 @@ UI.start = function() {
         // This is the largeVideoWithTheBackGround ; this also holds the logo
         $('#largeVideoContainer').hide();
         $('#remoteVideos').insertAfter('#videospace');
+        $('.filmstrip').remove();
         updateGridView();
 
 /*
