@@ -3,7 +3,6 @@
 const logger = require('jitsi-meet-logger').getLogger(__filename);
 
 const UI = {};
-
 import Chat from './side_pannels/chat/Chat';
 import SidePanels from './side_pannels/SidePanels';
 import SideContainerToggler from './side_pannels/SideContainerToggler';
@@ -12,7 +11,6 @@ import UIUtil from './util/UIUtil';
 import UIEvents from '../../service/UI/UIEvents';
 import EtherpadManager from './etherpad/Etherpad';
 import SharedVideoManager from './shared_video/SharedVideo';
-
 import VideoLayout from './videolayout/VideoLayout';
 import Filmstrip from './videolayout/Filmstrip';
 
@@ -20,7 +18,8 @@ import { updateDeviceList } from '../../react/features/base/devices';
 import { JitsiTrackErrors } from '../../react/features/base/lib-jitsi-meet';
 import {
     getLocalParticipant,
-    showParticipantJoinedNotification
+    showParticipantJoinedNotification,
+    getParticipants
 } from '../../react/features/base/participants';
 import { destroyLocalTracks } from '../../react/features/base/tracks';
 import { openDisplayNamePrompt } from '../../react/features/display-name';
@@ -360,40 +359,25 @@ UI.start = function() {
 
 
 
-/**
- *  Functions for Creating an Responsive Grid View
- * */
 
-const getNumOfVideoCallers = () => {
+function calculateCurrentGridLayout() {
 
-    const localVideo =  $('#filmstripLocalVideoThumbnail > .videocontainer').length;
-    const remoteVideos = $('#filmstripRemoteVideosContainer > .videocontainer').length;
-    const numOfCallers = localVideo + remoteVideos;
-
-
-
-    logger.info(`number of videoCallers is ${numOfCallers}`);
-    return numOfCallers;
-};
-
-function calculateCurrentGridLayout(numOfVideoCallers) {
-    logger.info(`PK: calculateCurrentRowSize triggered`);
+    const numberOfParticipants =  UI.getRemoteVideosCount();
 
     let rows = "100%";
     let columns = "100%";
 
-    switch (numOfVideoCallers) {
+    switch (numberOfParticipants) {
 
         case 0:
-            // no users view
+            // lonely User view
+            logger.info(`GridView participants ${numberOfParticipants}: lonely view detected`);
             return {rows, columns};
+
 
         case 1:
-            // lonely users view
-            return {rows, columns};
-
-            // two-user-view
-        case 2:
+            // two-user view
+            logger.info(`GridView participants ${numberOfParticipants}: 2-user view detected`);
             rows = "repeat(5,25%)";
             columns = "repeat(3,33%)";
             return {rows, columns}
@@ -403,16 +387,11 @@ function calculateCurrentGridLayout(numOfVideoCallers) {
 
 }
 
-
-
-
 // updateGridView updates the Grid
 const updateGridView = () => {
 
-    logger.info(`PK: updateGridView Triggered!`);
-    const numOfVideoCallers = getNumOfVideoCallers();
-    logger.info(`PK: currentNumberOfVideoCallers is ${numOfVideoCallers}`);
-    const currentLayout = calculateCurrentGridLayout(numOfVideoCallers);
+    logger.info(`GridView update.....`);
+    const currentLayout = calculateCurrentGridLayout();
 
     $('#remoteVideos').css({
         "grid-template-rows":currentLayout.rows,
