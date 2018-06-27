@@ -18,8 +18,7 @@ import { updateDeviceList } from '../../react/features/base/devices';
 import { JitsiTrackErrors } from '../../react/features/base/lib-jitsi-meet';
 import {
     getLocalParticipant,
-    showParticipantJoinedNotification,
-    getParticipants
+    showParticipantJoinedNotification
 } from '../../react/features/base/participants';
 import { destroyLocalTracks } from '../../react/features/base/tracks';
 import { openDisplayNamePrompt } from '../../react/features/display-name';
@@ -198,6 +197,7 @@ UI.changeDisplayName = function(id, displayName) {
     }
 };
 
+
 /**
  * Sets the "raised hand" status for a participant.
  *
@@ -255,10 +255,12 @@ UI.initConference = function() {
     followMeHandler = new FollowMe(APP.conference, UI);
 };
 
+
 /** *
  * Handler for toggling filmstrip
  */
 UI.handleToggleFilmstrip = () => UI.toggleFilmstrip();
+
 
 /**
  * Returns the shared document manager object.
@@ -267,6 +269,71 @@ UI.handleToggleFilmstrip = () => UI.toggleFilmstrip();
 UI.getSharedVideoManager = function() {
     return sharedVideoManager;
 };
+
+/**
+ *  Updates to DOM for GridView when it first loads
+ * */
+UI.loadGridView = () => {
+
+    // grid updates
+    $('#videospace').addClass('tile-filmstrip');
+    $('#remoteVideos').insertAfter('#videospace');
+
+    UI.updateGridView();
+
+    // remove elements we don't need
+    $('#largeVideoContainer').hide();
+    $('.filmstrip').remove();
+};
+
+
+/**
+ *  Updates to DOM for GridView when a user joins or leaves
+ *  @returns void
+ * */
+UI.updateGridView = () => {
+
+    logger.info(`GridView update.....`);
+    const currentLayout = UI.getGridLayout();
+
+    $('#remoteVideos').css({
+        "grid-template-rows":currentLayout.rows,
+        "grid-template-columns" : currentLayout.columns,
+    })
+
+};
+
+/**
+ *
+ * getGridLayout determines the rows / columns setting of the grid based on the number of participants. If no remoteParticipants are returned,
+ * we assume the lonelyUserView.
+ * @return object  rows and columns css
+ */
+UI.getGridLayout = () => {
+
+    const numberOfParticipants = UI.getRemoteVideosCount();
+
+    let rows = "100%";
+    let columns = "100%";
+
+    switch (numberOfParticipants) {
+
+        case 0:
+            //lonelyUserView
+            logger.info(`GridView participants ${numberOfParticipants}: lonely view detected`);
+            return {rows, columns};
+
+        case 1:
+            //twoUserView
+            logger.info(`GridView participants ${numberOfParticipants}: 2-user view detected`);
+            rows = "repeat(5,25%)";
+            columns = "repeat(3,33%)";
+            return {rows, columns}
+
+    }
+
+};
+
 
 /**
  * Starts the UI module and initializes all related components.
@@ -327,80 +394,12 @@ UI.start = function() {
 
     if (interfaceConfig.TILE_FILMSTRIP)
     {
-        $('#videospace').addClass('tile-filmstrip');
-        // This is the largeVideoWithTheBackGround ; this also holds the logo
-        $('#largeVideoContainer').hide();
-        $('#remoteVideos').insertAfter('#videospace');
-        $('.filmstrip').remove();
-        updateGridView();
-
-/*
-
-
-        //update css grid
-        updateGridView();*/
-
-
-
-        // move some elements that are required from largeVideoContainer to gridViewContainer
-        /*        $('#sharedVideo').appendTo('#gridViewContainer');
-                $('#remoteMessage').appendTo('#gridViewContainer');
-                $('#etherpad').appendTo('#gridViewContainer');
-                $('#remotePresenceMessage').appendTo('#gridViewContainer');
-                $('#remoteConnectionMessage').appendTo('#gridViewContainer');
-                $("#localConnectionMessage").appendTo("#gridViewContainer");*/
-
+       UI.loadGridView();
+       document.title = interfaceConfig.APP_NAME;
     }
 
 
-    document.title = interfaceConfig.APP_NAME;
 };
-
-
-
-
-
-function calculateCurrentGridLayout() {
-
-    const numberOfParticipants =  UI.getRemoteVideosCount();
-
-    let rows = "100%";
-    let columns = "100%";
-
-    switch (numberOfParticipants) {
-
-        case 0:
-            // lonely User view
-            logger.info(`GridView participants ${numberOfParticipants}: lonely view detected`);
-            return {rows, columns};
-
-
-        case 1:
-            // two-user view
-            logger.info(`GridView participants ${numberOfParticipants}: 2-user view detected`);
-            rows = "repeat(5,25%)";
-            columns = "repeat(3,33%)";
-            return {rows, columns}
-
-    }
-
-
-}
-
-// updateGridView updates the Grid
-const updateGridView = () => {
-
-    logger.info(`GridView update.....`);
-    const currentLayout = calculateCurrentGridLayout();
-
-    $('#remoteVideos').css({
-        "grid-template-rows":currentLayout.rows,
-        "grid-template-columns" : currentLayout.columns,
-    })
-
-};
-
-
 
 
 /**
@@ -435,19 +434,15 @@ UI.bindEvents = () => {
     $(window).resize(onResize);
 
 
-    /** HAVING TO SYNC THE TWO CONTAINERS
-     *
-     */
     // removed a new videoContainer
     $("#remoteVideos").on('DOMNodeRemoved', (event) => {
-        updateGridView();
+        UI.updateGridView();
     });
 
     // Added a new videoContainer
     $("#remoteVideos").on('DOMNodeInserted', (event) =>
     {
-
-        updateGridView();
+        UI.updateGridView();
     })
 
 

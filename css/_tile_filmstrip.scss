@@ -10,17 +10,13 @@
 
 
 .reduce-height {
+
     all: unset !important;
 }
 
 #filmStripLocalVideo {
-
     height: 100%;
-
 }
-
-
-
 
 #remoteVideos {
 
@@ -34,6 +30,7 @@
 
     grid-gap: 20px;
     margin: 0;
+
     //overrides
     border: unset !important;
      padding-left:unset !important;
@@ -50,6 +47,12 @@
 }
 
 
+// override black layover for remoteVideos
+.display-name-on-black video {
+
+    opacity: unset !important;
+    visibility: unset !important;
+}
 
 
 .flipVideoX {
@@ -60,12 +63,7 @@
 }
 
 
-#localVideoWrapper {
-    width: 100%;
-    height: 100%;
 
-
-}
 
 #localVideoContainer {
 
@@ -74,6 +72,17 @@
         height: 100% !important;
         min-height: unset !important;
         min-width: unset !important;
+
+    #localVideoWrapper {
+        width: 100%;
+        height: 100%;
+    }
+
+     .display-name-on-black video {
+         // override black layover for LocalVideo
+         opacity: unset !important;
+         visibility: unset !important;
+     }
 }
 
 
