@@ -271,7 +271,7 @@ UI.getSharedVideoManager = function() {
 };
 
 /**
- *  Updates to DOM for GridView when it first loads
+ *  Updates to DOM for GridView when UI.start is called.
  * */
 UI.loadGridView = () => {
 
@@ -281,7 +281,7 @@ UI.loadGridView = () => {
     $('#remoteVideos').insertAfter('#videospace');
     $('.filmstrip').remove();
 
-    UI.updateGridView();
+    UI.gridUpdate();
 
 };
 
@@ -292,47 +292,47 @@ UI.loadGridView = () => {
  *  Updates to DOM for GridView when a user joins or leaves
  *  @returns void
  * */
-UI.updateGridView = () => {
+UI.gridUpdate = () => {
 
     logger.info(`GridView update.....`);
     const currentLayout = UI.getGridLayout();
-
-    $('#remoteVideos').css({
-        "grid-template-rows":currentLayout.rows,
-        "grid-template-columns" : currentLayout.columns,
-    })
-
+    $('#remoteVideos').css(currentLayout);
+    logger.info(`GridView update complete.`);
 };
 
 /**
  *
  * getGridLayout determines the rows / columns setting of the grid based on the number of participants. If no remoteParticipants are returned,
  * we assume the lonelyUserView.
- * @return object  rows and columns css
+ * @return object  CSS properties that will be added to #remoteVideos div
  */
 UI.getGridLayout = () => {
 
     const numberOfParticipants = UI.getRemoteVideosCount();
 
+    // default singleUser view
     let rows = "100%";
     let columns = "100%";
 
     switch (numberOfParticipants) {
-
         case 0:
-            //lonelyUserView
-            logger.info(`GridView participants ${numberOfParticipants}: lonely view detected`);
-            return {rows, columns};
+            break;
 
         case 1:
-            //twoUserView
             logger.info(`GridView participants ${numberOfParticipants}: 2-user view detected`);
+            //twoUserView
             rows = "repeat(4,25%)";
             columns = "repeat(3,33%)";
-            return {rows, columns}
 
     }
 
+    return {
+        "margin-top": "90px",
+        "margin-left": "10px",
+        "margin-right": "20px",
+        "grid-template-rows": rows,
+        "grid-template-columns" : columns,
+    };
 };
 
 
@@ -438,13 +438,13 @@ UI.bindEvents = () => {
 
     // removed a new videoContainer
     $("#remoteVideos").on('DOMNodeRemoved', (event) => {
-        UI.updateGridView();
+        UI.gridUpdate();
     });
 
     // Added a new videoContainer
     $("#remoteVideos").on('DOMNodeInserted', (event) =>
     {
-        UI.updateGridView();
+        UI.gridUpdate();
     })
 
 
