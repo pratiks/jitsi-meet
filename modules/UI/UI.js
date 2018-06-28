@@ -313,6 +313,7 @@ UI.getGridLayout = () => {
     // default singleUser view
     let rows = "100%";
     let columns = "100%";
+    let margin="0";
 
     switch (numberOfParticipants) {
         case 0:
@@ -323,13 +324,12 @@ UI.getGridLayout = () => {
             //twoUserView
             rows = "repeat(4,25%)";
             columns = "repeat(3,33%)";
+            margin="90 10 0 10";
 
     }
 
     return {
-        "margin-top": "90px",
-        "margin-left": "10px",
-        "margin-right": "20px",
+        "margin": margin,
         "grid-template-rows": rows,
         "grid-template-columns" : columns,
     };
