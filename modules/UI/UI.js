@@ -275,16 +275,17 @@ UI.getSharedVideoManager = function() {
  * */
 UI.loadGridView = () => {
 
+    //todo: update to not add this directly.
+
     // grid updates
-    $('#videospace').addClass('tile-filmstrip');
     $('#remoteVideos').insertAfter('#videospace');
+    $('.filmstrip').remove();
 
     UI.updateGridView();
 
-    // remove elements we don't need
-    $('#largeVideoContainer').hide();
-    $('.filmstrip').remove();
 };
+
+
 
 
 /**
@@ -326,7 +327,7 @@ UI.getGridLayout = () => {
         case 1:
             //twoUserView
             logger.info(`GridView participants ${numberOfParticipants}: 2-user view detected`);
-            rows = "repeat(5,25%)";
+            rows = "repeat(4,25%)";
             columns = "repeat(3,33%)";
             return {rows, columns}
 
@@ -394,8 +395,9 @@ UI.start = function() {
 
     if (interfaceConfig.TILE_FILMSTRIP)
     {
-       UI.loadGridView();
-       document.title = interfaceConfig.APP_NAME;
+        $('body').addClass('tile-filmstrip');
+        UI.loadGridView();
+        document.title = interfaceConfig.APP_NAME;
     }
 
 
