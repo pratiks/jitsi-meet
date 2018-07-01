@@ -269,6 +269,62 @@ UI.getSharedVideoManager = function() {
     return sharedVideoManager;
 };
 
+
+/**
+ *  Updates to DOM for GridView when a user joins or leaves
+ *  @returns void
+ * */
+UI.gridUpdate = () => {
+
+    logger.info(`GridView update.....`);
+    const currentLayout = UI.getGridLayout();
+    // update grid
+    $('#remoteVideos').css(currentLayout);
+    logger.info(`GridView update complete.`);
+};
+
+/**
+ *
+ * getGridLayout determines the rows / columns setting of the grid based on the number of participants. If no remoteParticipants are returned,
+ * @return object  CSS properties that will be added to #remoteVideos div
+ */
+UI.getGridLayout = () => {
+
+    const numberOfParticipants = UI.getRemoteVideosCount();
+
+    // default singleUser view
+    let rows = "100%";
+    let columns = "100%";
+    let margin="0";
+
+    switch (numberOfParticipants) {
+        case 0:
+            break;
+
+        case 1:
+            logger.info(`GridView participants ${numberOfParticipants}: 2-user view detected`);
+            //twoUserView
+            rows = "repeat(4,1fr)";
+            columns = "repeat(3, 1fr)";
+            margin="90 10 0 10";
+
+        case 2:
+            logger.info(`GridView participants ${numberOfParticipants}: 2-user view detected`);
+            //twoUserView
+            rows = "repeat(4,1fr)";
+            columns = "repeat(3, 1fr)";
+            margin="90 10 0 10";
+
+    }
+
+    return {
+        "margin": margin,
+        "grid-template-rows": rows,
+        "grid-template-columns" : columns,
+    };
+};
+
+
 /**
  * Starts the UI module and initializes all related components.
  *
@@ -321,11 +377,21 @@ UI.start = function() {
         SidePanels.init(eventEmitter);
     }
 
-    const filmstripTypeClassname = interfaceConfig.VERTICAL_FILMSTRIP
-        ? 'vertical-filmstrip' : 'horizontal-filmstrip';
+    let filmstripTypeClassname;
+
+    if (interfaceConfig.TILE_FILMSTRIP) {
+        filmstripTypeClassname = 'tile-filmstrip';
+        $('body').addClass(filmstripTypeClassname);
+        $('#dominantSpeaker').hide();
+        $('#remoteVideos').insertAfter('#videospace');
+        UI.gridUpdate();
+
+    } else {
+        filmstripTypeClassname = interfaceConfig.VERTICAL_FILMSTRIP
+            ? 'vertical-filmstrip' : 'horizontal-filmstrip';
+    }
 
     $('body').addClass(filmstripTypeClassname);
-
     document.title = interfaceConfig.APP_NAME;
 };
 
@@ -349,6 +415,7 @@ UI.bindEvents = () => {
      *
      */
     function onResize() {
+
         SideContainerToggler.resize();
         VideoLayout.resizeVideoArea();
     }
@@ -359,6 +426,12 @@ UI.bindEvents = () => {
             onResize);
 
     $(window).resize(onResize);
+
+    // Grid Events
+    $("#remoteVideos").on('DOMNodeRemoved', UI.gridUpdate);
+
+    $("#remoteVideos").on('DOMNodeInserted', UI.gridUpdate);
+
 };
 
 /**
