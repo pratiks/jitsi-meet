@@ -1,0 +1,71 @@
+
+/** Grid Container todo: rename the container? */
+
+
+#filmStripLocalVideo {
+    height: 100%;
+}
+
+#filmstripRemoteVideos {
+    height: 100%;
+}
+
+#remoteVideos {
+
+    display: grid;
+    height: 100% !important;
+    grid-gap: 20px;
+
+    //overrides
+    position: unset !important;
+    border: unset !important;
+    padding-left:unset !important;
+    transition: unset !important;
+
+    .videocontainer {
+
+        grid-row: span 1;
+        grid-column: span 1;
+
+
+        position: relative !important;
+        display: block !important;
+
+        margin: unset !important;
+        border: unset !important;
+
+
+        // Unset width height, as we will be using the grid size to fill up the video
+        width: unset !important;
+        height: unset !important;
+        min-width: unset !important;
+        min-height: unset !important;
+    }
+
+}
+
+.flipVideoX {
+
+    width: 100%;
+    height: 100%;
+
+}
+
+
+#localVideoContainer {
+
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: unset !important;
+    min-width: unset !important;
+
+    #localVideoWrapper {
+        width: 100%;
+        height: 100%;
+    }
+
+
+}
+
+
