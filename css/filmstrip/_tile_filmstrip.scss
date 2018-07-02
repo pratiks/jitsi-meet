@@ -34,13 +34,6 @@ Default video containers will be:
     height: 100% !important;
 }
 
-.flipVideoX {
-
-    width: 100%;
-    height: 100%;
-
-}
-
 #localVideoContainer {
 
     display: block !important;
@@ -50,10 +43,16 @@ Default video containers will be:
     min-width: unset !important;
 
     #localVideoWrapper {
-        width: 100%;
-        height: 100%;
+        display: none;
     }
 
 }
 
+
+#largeVideoContainer {
+
+    .filmstrip__toolbar {
+        display: none;
+    }
+}
 

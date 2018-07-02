@@ -276,7 +276,7 @@ UI.getSharedVideoManager = function () {
 UI.loadGridView = function () {
 
     $('#dominantSpeaker').hide();
-    $('#largeVideoContainer').hide();
+
 
     //create a new gridContainer
     $("#videoconference_page").append(`<div id='gridContainer'></div>`);
