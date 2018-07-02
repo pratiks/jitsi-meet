@@ -269,6 +269,26 @@ UI.getSharedVideoManager = function() {
     return sharedVideoManager;
 };
 
+/**
+ * Returns the shared document manager object.
+ * @return {EtherpadManager} the shared document manager object
+ */
+UI.loadGridView = function() {
+
+    //create a new gridContainer
+    $("#videoconference_page").append(`<div id='gridContainer' style='width: 100%; height: 100%'></div>`);
+
+    //copy from one div and puts it to another
+    $("#localVideoContainer").appendTo("#gridContainer");
+
+    //copy all remote videos
+    $("#filmstripRemoteVideosContainer > span").appendTo("#gridContainer");
+
+    $('#dominantSpeaker').hide();
+
+};
+
+
 
 /**
  *  Updates to DOM for GridView when a user joins or leaves
@@ -278,10 +298,22 @@ UI.gridUpdate = () => {
 
     logger.info(`GridView update.....`);
     const currentLayout = UI.getGridLayout();
+
+
     // update grid
-    $('#remoteVideos').css(currentLayout);
+    $('#gridContainer').css(currentLayout);
     logger.info(`GridView update complete.`);
 };
+
+/**
+ *
+ * getTotalNumberOfRemoteVideos
+ * @returns int
+ */
+UI.getTotalNumberOfRemoteVideos = () => {
+    return $('#gridContainer > span').length;
+};
+
 
 /**
  *
@@ -290,7 +322,7 @@ UI.gridUpdate = () => {
  */
 UI.getGridLayout = () => {
 
-    const numberOfParticipants = UI.getRemoteVideosCount();
+    const numberOfParticipants = UI.getTotalNumberOfRemoteVideos();
 
     // default singleUser view
     let rows = "100%";
@@ -298,18 +330,19 @@ UI.getGridLayout = () => {
     let margin="0";
 
     switch (numberOfParticipants) {
-        case 0:
+        case 1:
+            logger.info(`GridView participants ${numberOfParticipants}: 1-user lonely user view detected`);
             break;
 
-        case 1:
+        case 2:
             logger.info(`GridView participants ${numberOfParticipants}: 2-user view detected`);
             //twoUserView
             rows = "repeat(4,1fr)";
             columns = "repeat(3, 1fr)";
             margin="90 10 0 10";
 
-        case 2:
-            logger.info(`GridView participants ${numberOfParticipants}: 2-user view detected`);
+        case 3:
+            logger.info(`GridView participants ${numberOfParticipants}: 3-user view detected`);
             //twoUserView
             rows = "repeat(4,1fr)";
             columns = "repeat(3, 1fr)";
@@ -381,9 +414,8 @@ UI.start = function() {
 
     if (interfaceConfig.TILE_FILMSTRIP) {
         filmstripTypeClassname = 'tile-filmstrip';
-        $('body').addClass(filmstripTypeClassname);
-        $('#dominantSpeaker').hide();
-        $('#remoteVideos').insertAfter('#videospace');
+
+        UI.loadGridView();
         UI.gridUpdate();
 
     } else {
@@ -427,10 +459,19 @@ UI.bindEvents = () => {
 
     $(window).resize(onResize);
 
-    // Grid Events
-    $("#remoteVideos").on('DOMNodeRemoved', UI.gridUpdate);
+    // removed a new videoContainer
+    $("#filmstripRemoteVideosContainer").on('DOMNodeRemoved', (event) => {
+        $("#gridContainer").remove(event.target);
+        UI.gridUpdate();
+    });
 
-    $("#remoteVideos").on('DOMNodeInserted', UI.gridUpdate);
+    // When a new remote video is added, add it to gridContainer
+    $("#filmstripRemoteVideosContainer").on('DOMNodeInserted', (event) =>
+    {
+        logger.info(`PK: ListenerEvent add Container Called`);
+        $(event.target).appendTo("#gridContainer");
+        UI.gridUpdate();
+    });
 
 };
 

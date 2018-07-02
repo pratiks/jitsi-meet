@@ -2,19 +2,18 @@
 /** Grid Container todo: rename the container? */
 
 
-#filmStripLocalVideo {
-    height: 100%;
-}
-
-#filmstripRemoteVideos {
-    height: 100%;
-}
 
 #remoteVideos {
+    display: none;
+}
+
+#gridContainer {
 
     display: grid;
-    height: 100% !important;
     grid-gap: 20px;
+    border: 2px solid #f76707;
+    border-radius: 5px;
+    background-color: #fff4e6;
 
     //overrides
     position: unset !important;
@@ -26,23 +25,12 @@
 
         grid-row: span 1;
         grid-column: span 1;
-
-
-        position: relative !important;
-        display: block !important;
-
-        margin: unset !important;
-        border: unset !important;
-
-
-        // Unset width height, as we will be using the grid size to fill up the video
-        width: unset !important;
-        height: unset !important;
-        min-width: unset !important;
-        min-height: unset !important;
+        height: 100% !important;
     }
 
+
 }
+
 
 .flipVideoX {
 
@@ -55,7 +43,7 @@
 #localVideoContainer {
 
     display: block !important;
-    width: 100% !important;
+    width: unset !important;
     height: 100% !important;
     min-height: unset !important;
     min-width: unset !important;
