@@ -3,7 +3,6 @@
 const logger = require('jitsi-meet-logger').getLogger(__filename);
 
 const UI = {};
-
 import Chat from './side_pannels/chat/Chat';
 import SidePanels from './side_pannels/SidePanels';
 import SideContainerToggler from './side_pannels/SideContainerToggler';
@@ -12,7 +11,6 @@ import UIUtil from './util/UIUtil';
 import UIEvents from '../../service/UI/UIEvents';
 import EtherpadManager from './etherpad/Etherpad';
 import SharedVideoManager from './shared_video/SharedVideo';
-
 import VideoLayout from './videolayout/VideoLayout';
 import Filmstrip from './videolayout/Filmstrip';
 
@@ -199,6 +197,7 @@ UI.changeDisplayName = function(id, displayName) {
     }
 };
 
+
 /**
  * Sets the "raised hand" status for a participant.
  *
@@ -256,10 +255,12 @@ UI.initConference = function() {
     followMeHandler = new FollowMe(APP.conference, UI);
 };
 
+
 /** *
  * Handler for toggling filmstrip
  */
 UI.handleToggleFilmstrip = () => UI.toggleFilmstrip();
+
 
 /**
  * Returns the shared document manager object.
@@ -268,6 +269,87 @@ UI.handleToggleFilmstrip = () => UI.toggleFilmstrip();
 UI.getSharedVideoManager = function() {
     return sharedVideoManager;
 };
+
+/**
+ *  //todo
+ * */
+UI.loadTileView = () => {
+
+    //todo: update to not add this directly.
+    $('#largeVideoWrapper, #largeBackgroundVideoContainer, #dominantSpeaker').hide();
+    $('#localVideoContainer').appendTo('#filmstripRemoteVideosContainer');
+    // grid updates
+    UI.updateTileView();
+
+};
+
+
+
+
+/**
+ * todo
+ * */
+UI.updateTileView = () => {
+
+    logger.info(`GridView update.....`);
+    const currentLayout = UI.getGridLayout();
+    // Update Wrapper Flexbox
+    $('#filmstripRemoteVideoContainer').css(currentLayout.remote_videos);
+
+    // remove existin user-item class.
+    $('#filmstripRemoteVideosContainer > span').removeClass('[class^="-item"]');
+    $(' #filmstripRemoteVideosContainer > span').addClass(currentLayout.className);
+
+    logger.info(`GridView update complete.`);
+};
+
+/**
+ *
+ * todo
+ */
+UI.getGridLayout = () => {
+
+    const numberOfParticipants = UI.getRemoteVideosCount() + 1;
+    let remote_videos = {};
+    let videoContainerClassName = 'one-by-one-item';
+
+    // default singleUser view
+    logger.info(`tileView |total number of participants including me is ${numberOfParticipants} `);
+
+
+    switch (numberOfParticipants) {
+        case 1:
+            logger.info(`tileView |one-user-container `);
+            videoContainerClassName = 'one-by-one-item';
+            break;
+
+        case 2:
+            logger.info(`tileView |two-user-container `);
+            videoContainerClassName = 'two-by-one-item';
+            break;
+
+        case (3 || 4):
+            logger.info(`tileView |three-user-container `);
+            videoContainerClassName = 'two-by-two-item';
+            break;
+
+        // ghetto ass shit. redo-this.
+        case (5 || 6 || 7 || 8 || 9 ):
+            logger.info(`tileView |five-or-more-user-container `);
+            remote_videos = {"align-content": "baseline"};
+            videoContainerClassName = 'three-by-three-item';
+            break;
+
+        case 10:
+            logger.info(`tileView |five-or-more-user-container `);
+            videoContainerClassName = 'four-by-four-item';
+            break;
+
+    }
+
+    return {remote_videos: remote_videos, className: videoContainerClassName }
+};
+
 
 /**
  * Starts the UI module and initializes all related components.
@@ -320,14 +402,22 @@ UI.start = function() {
         // Initialize side panels
         SidePanels.init(eventEmitter);
     }
-
-    const filmstripTypeClassname = interfaceConfig.VERTICAL_FILMSTRIP
+    let filmstripTypeClassname;
+    filmstripTypeClassname = interfaceConfig.VERTICAL_FILMSTRIP
         ? 'vertical-filmstrip' : 'horizontal-filmstrip';
 
-    $('body').addClass(filmstripTypeClassname);
+    if (interfaceConfig.TILE_FILMSTRIP)
+    {
+        filmstripTypeClassname = 'tile-filmstrip';
+        $('body').addClass('tile-filmstrip');
+        UI.loadTileView();
+    }
 
+    $('body').addClass(filmstripTypeClassname);
     document.title = interfaceConfig.APP_NAME;
+
 };
+
 
 /**
  * Setup some UI event listeners.
@@ -359,6 +449,20 @@ UI.bindEvents = () => {
             onResize);
 
     $(window).resize(onResize);
+
+
+    // removed a new videoContainer
+    $("#filmstripRemoteVideosContainer").on('DOMNodeRemoved', (event) => {
+        UI.updateTileView();
+    });
+
+    // Added a new videoContainer
+    $("#filmstripRemoteVideosContainer").on('DOMNodeInserted', (event) =>
+    {
+        UI.updateTileView();
+    })
+
+
 };
 
 /**
@@ -660,7 +764,7 @@ UI.removeListener = function(type, listener) {
 UI.emitEvent = (type, ...options) => eventEmitter.emit(type, ...options);
 
 UI.clickOnVideo = function(videoNumber) {
-    const videos = $('#remoteVideos .videocontainer:not(#mixedstream)');
+    const videos = $('#filmstripRemoteVideoContainer .videocontainer:not(#mixedstream)');
     const videosLength = videos.length;
 
     if (videosLength <= videoNumber) {
