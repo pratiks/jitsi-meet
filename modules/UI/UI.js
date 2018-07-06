@@ -291,16 +291,11 @@ UI.loadTileView = () => {
  * */
 UI.updateTileView = () => {
 
-    logger.info(`GridView update.....`);
+    logger.info(`TileView update begin`);
     const currentLayout = UI.getGridLayout();
-    // Update Wrapper Flexbox
-    $('#filmstripRemoteVideoContainer').css(currentLayout.remote_videos);
-
-    // remove existin user-item class.
-    $('#filmstripRemoteVideosContainer > span').removeClass('[class^="-item"]');
-    $(' #filmstripRemoteVideosContainer > span').addClass(currentLayout.className);
-
-    logger.info(`GridView update complete.`);
+    console.log('TileView | ', currentLayout);
+    $('.videocontainer').css(currentLayout);
+    logger.info(`TileView update complete`);
 };
 
 /**
@@ -310,44 +305,44 @@ UI.updateTileView = () => {
 UI.getGridLayout = () => {
 
     const numberOfParticipants = UI.getRemoteVideosCount() + 1;
-    let remote_videos = {};
-    let videoContainerClassName = 'one-by-one-item';
+    let video_container_props = {};
 
     // default singleUser view
     logger.info(`tileView |total number of participants including me is ${numberOfParticipants} `);
 
-
-    switch (numberOfParticipants) {
-        case 1:
-            logger.info(`tileView |one-user-container `);
-            videoContainerClassName = 'one-by-one-item';
-            break;
-
-        case 2:
-            logger.info(`tileView |two-user-container `);
-            videoContainerClassName = 'two-by-one-item';
-            break;
-
-        case (3 || 4):
-            logger.info(`tileView |three-user-container `);
-            videoContainerClassName = 'two-by-two-item';
-            break;
-
-        // ghetto ass shit. redo-this.
-        case (5 || 6 || 7 || 8 || 9 ):
-            logger.info(`tileView |five-or-more-user-container `);
-            remote_videos = {"align-content": "baseline"};
-            videoContainerClassName = 'three-by-three-item';
-            break;
-
-        case 10:
-            logger.info(`tileView |five-or-more-user-container `);
-            videoContainerClassName = 'four-by-four-item';
-            break;
-
+    if (numberOfParticipants === 1) {
+        logger.info(`tileView | 1 x 1 view `);
+        video_container_props = {
+            "width": "100%",
+            "height": "100%"
+        };
+    } else if (numberOfParticipants === 2) {
+        logger.info(`tileView | 2 x 1 view`);
+        video_container_props = {
+            "width": "calc(100% * (1/2) - 10px)",
+            "height": "100%"
+        };
+    } else if (numberOfParticipants > 2 <= 4) {
+        logger.info(`tileView | 2 x 2 view`);
+        video_container_props = {
+            "width": "calc(100% * (1/2) - 10px)",
+            "height": "calc(100% / 2)"
+        };
+    } else if (numberOfParticipants > 4 <= 9) {
+        logger.info(`tileView | 3 x 3 view`);
+        video_container_props = {
+            "width": "calc(100% * (1/3) - 10px)",
+            "height": " calc(100% / 3)"
+        };
+    } else if (numberOfParticipants > 10) {
+        logger.info(`tileView |4 x 4 view`);
+        video_container_props = {
+            "width": "calc(100% * (1/4) - 10px)",
+            "height": " calc(100% / 4)"
+        };
     }
 
-    return {remote_videos: remote_videos, className: videoContainerClassName }
+    return video_container_props
 };
 
 
