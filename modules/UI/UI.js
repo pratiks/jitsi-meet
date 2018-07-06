@@ -305,44 +305,23 @@ UI.updateTileView = () => {
 UI.getGridLayout = () => {
 
     const numberOfParticipants = UI.getRemoteVideosCount() + 1;
-    let video_container_props = {};
 
     // default singleUser view
     logger.info(`tileView |total number of participants including me is ${numberOfParticipants} `);
+        const flex_grow = 1;
+        const flex_basis = ` calc(100% * (1/${numberOfParticipants})`;
+        const flex_shrink  = "0";
+        const width = `calc(100% * (1/${numberOfParticipants}) - 10px)`;
 
-    if (numberOfParticipants === 1) {
-        logger.info(`tileView | 1 x 1 view `);
-        video_container_props = {
-            "width": "100%",
-            "height": "100%"
-        };
-    } else if (numberOfParticipants === 2) {
-        logger.info(`tileView | 2 x 1 view`);
-        video_container_props = {
-            "width": "calc(100% * (1/2) - 10px)",
-            "height": "100%"
-        };
-    } else if (numberOfParticipants > 2 <= 4) {
-        logger.info(`tileView | 2 x 2 view`);
-        video_container_props = {
-            "width": "calc(100% * (1/2) - 10px)",
-            "height": "calc(100% / 2)"
-        };
-    } else if (numberOfParticipants > 4 <= 9) {
-        logger.info(`tileView | 3 x 3 view`);
-        video_container_props = {
-            "width": "calc(100% * (1/3) - 10px)",
-            "height": " calc(100% / 3)"
-        };
-    } else if (numberOfParticipants > 10) {
-        logger.info(`tileView |4 x 4 view`);
-        video_container_props = {
-            "width": "calc(100% * (1/4) - 10px)",
-            "height": " calc(100% / 4)"
-        };
-    }
+        logger.info(`tileView | numOfParticipants: ${numberOfParticipants} g${flex_grow}  ${flex_basis}  ${flex_shrink}`);
+        return {
+            "flex-grow": flex_grow,
+            "flex-basis": flex_basis,
+            "flex-shrink": flex_shrink,
+            "width": width
+    };
 
-    return video_container_props
+
 };
 
 
@@ -446,10 +425,6 @@ UI.bindEvents = () => {
     $(window).resize(onResize);
 
 
-    // removed a new videoContainer
-    $("#filmstripRemoteVideosContainer").on('DOMNodeRemoved', (event) => {
-        UI.updateTileView();
-    });
 
     // Added a new videoContainer
     $("#filmstripRemoteVideosContainer").on('DOMNodeInserted', (event) =>
