@@ -14,15 +14,14 @@
     top: 0;
     bottom: 0;
     grid-gap:  1px;
+    transition: 2s;
     background-color: grey !important; // use this to set the color of the "borders"
 
     .videocontainer {
-
         min-height: unset !important;
         min-width: unset !important;
         width: 100% !important;
         height:100% !important;
-
     }
 
     #localVideoWrapper > video {
@@ -36,14 +35,7 @@
         width: 100% !important;
         height: 100% !important;
         z-index: unset !important;
+        object-fit: unset !important;
     }
 
 }
-
-
-
-.display-name-on-black video {
-    all: unset !important;
-}
-
-
