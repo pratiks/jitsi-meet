@@ -283,9 +283,6 @@ UI.loadTileView = () => {
 
 };
 
-
-
-
 /**
  * todo
  * */
@@ -293,8 +290,9 @@ UI.updateTileView = () => {
 
     logger.info(`TileView update begin`);
     const currentLayout = UI.getGridLayout();
-    console.log('TileView | ', currentLayout);
-    $('.videocontainer').css(currentLayout);
+/*    console.log('TileView | ', currentLayout);
+    console.log("tileView width ", currentLayout.gridContainer.width);
+    $('#filmstripRemoteVideosContainer').css(currentLayout.grid);*/
     logger.info(`TileView update complete`);
 };
 
@@ -306,21 +304,60 @@ UI.getGridLayout = () => {
 
     const numberOfParticipants = UI.getRemoteVideosCount() + 1;
 
+    let grid;
+    let gridContainer = {};
     // default singleUser view
-    logger.info(`tileView |total number of participants including me is ${numberOfParticipants} `);
-        const flex_grow = 1;
-        const flex_basis = ` calc(100% * (1/${numberOfParticipants})`;
-        const flex_shrink  = "0";
-        const width = `calc(100% * (1/${numberOfParticipants}) - 10px)`;
+    logger.info(`tileView | total number of participants including me is ${numberOfParticipants} `);
 
-        logger.info(`tileView | numOfParticipants: ${numberOfParticipants} g${flex_grow}  ${flex_basis}  ${flex_shrink}`);
-        return {
-            "flex-grow": flex_grow,
-            "flex-basis": flex_basis,
-            "flex-shrink": flex_shrink,
-            "width": width
-    };
 
+
+        // const videoContainerWidth = `calc(100% * (1/${numberOfParticipants}))`;
+        // //const videoContainerHeight = `calc(100% * (1/${numberOfParticipants}))`;
+        //
+        // const gridHeight = `calc(100% * (1/${numberOfParticipants}))`;
+        //
+        // logger.info(`tileView | numOfParticipants: ${numberOfParticipants} `);
+        // const grid =  {
+        //
+        //     // repeat(numberOfRows, HeightOfItems)
+        //     "grid-template-rows": `repeat(1, ${gridHeight})`,
+        //
+        //     // repeat(numberOfColumns, WidthOfItems)
+        //     "grid-auto-columns": `repeat(${numberOfParticipants}, 1fr)`,
+        // };
+
+        /**
+         * lonely user view
+         * **/
+        if(numberOfParticipants === 1) {
+            grid = {  "grid-template-columns": `repeat(1, 1fr)` };
+        }
+
+        /**
+         * two x two
+         * **/
+        if(numberOfParticipants >=2 && numberOfParticipants <= 4) {
+            grid = {   "grid-template-columns": `repeat(2, 2fr)` };
+        }
+
+        /**
+         * 3 x 3
+         * **/
+        if(numberOfParticipants >= 5 && numberOfParticipants <= 9) {
+            grid = {   "grid-template-columns": `repeat(3, 2fr)` };
+        }
+
+
+        /**
+         * 4 x 4
+         * **/
+        if(numberOfParticipants >10 && numberOfParticipants <= 16) {
+            grid = {   "grid-template-columns": `repeat(3, 2fr)` };
+        }
+
+    $('#filmstripRemoteVideosContainer').css(grid);
+
+    return { grid, gridContainer }
 
 };
 
@@ -432,7 +469,11 @@ UI.bindEvents = () => {
         UI.updateTileView();
     })
 
-
+    // Added a new videoContainer
+    $("#filmstripRemoteVideosContainer").on('DOMNodeRemoved', (event) =>
+    {
+        UI.updateTileView();
+    })
 };
 
 /**
