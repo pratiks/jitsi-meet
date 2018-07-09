@@ -1,33 +1,49 @@
-:root {
-    --width: 100%;
-    --height: 100%;
+
+
+#largeVideoContainer {
+
 }
 
 #filmstripRemoteVideosContainer {
 
-    outline: 1px dashed red !important;
     position: absolute;
     display: grid;
-    grid-gap: 5px;
     grid-auto-flow: row;
-
     left: 0;
     right: 0;
     top: 0;
     bottom: 0;
+    grid-gap:  1px;
+    background-color: grey !important; // use this to set the color of the "borders"
 
     .videocontainer {
+
         min-height: unset !important;
-        min-width:  unset !important;
-        width: var(--width) !important;
-        height: var(--height) !important;
+        min-width: unset !important;
+        width: 100% !important;
+        height:100% !important;
+
+    }
+
+    #localVideoWrapper > video {
+
+        top: 0 !important;
+        right: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+
+        position: absolute !important;
+        width: 100% !important;
+        height: 100% !important;
+        z-index: unset !important;
     }
 
 }
 
 
 
-.display-name-on-black {
+.display-name-on-black video {
     all: unset !important;
 }
+
 

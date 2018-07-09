@@ -334,19 +334,18 @@ UI.getGridLayout = () => {
         }
 
         /**
-         * two x two
+         * 2 x 2
          * **/
         if(numberOfParticipants >=2 && numberOfParticipants <= 4) {
-            grid = {   "grid-template-columns": `repeat(2, 2fr)` };
+            grid = {   "grid-template-columns": `repeat(2, 1fr)` };
         }
 
         /**
-         * 3 x 3
+         * 2 x 3
          * **/
         if(numberOfParticipants >= 5 && numberOfParticipants <= 9) {
-            grid = {   "grid-template-columns": `repeat(3, 2fr)` };
+            grid = {   "grid-template-columns": `repeat(3, 1fr)` };
         }
-
 
         /**
          * 4 x 4
