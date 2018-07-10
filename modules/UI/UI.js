@@ -337,7 +337,7 @@ UI.getGridLayout = () => {
          * 1 x 2
          * **/
         if(numberOfParticipants === 2) {
-            grid = {  "grid-template-columns": `repeat(2, 1fr)`, "top": "35%", "bottom": "35%"  };
+            grid = {  "grid-template-columns": `repeat(2, 1fr)`, "top": "30%", "bottom": "30%"  };
         }
 
     // ROWS X COLUMNS
