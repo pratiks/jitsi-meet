@@ -1,7 +1,13 @@
 
 
 #largeVideoContainer {
+    background-color: rgb(51, 51, 51) !important;
 
+    .videocontainer {
+
+        background-color: rgb(51, 51, 51) !important;
+
+    }
 }
 
 #filmstripRemoteVideosContainer {
@@ -13,22 +19,28 @@
     right: 0;
     top: 0;
     bottom: 0;
-    grid-gap:  1px;
-    transition: 2s;
-    background-color: grey !important; // use this to set the color of the "borders"
+    grid-gap: 2px;
+    transition: .5s;
+    background-color: rgb(51, 51, 51) !important;
+
 
     .videocontainer {
         min-height: unset !important;
         min-width: unset !important;
         width: 100% !important;
         height:100% !important;
+
+         border: unset !important;
+         border-radius: unset !important;
+         margin: unset !important;
     }
 
     #localVideoWrapper > video {
 
-        top: 0 !important;
         right: 0 !important;
         left: 0 !important;
+
+        top: 0 !important;
         bottom: 0 !important;
 
         position: absolute !important;
@@ -36,6 +48,20 @@
         height: 100% !important;
         z-index: unset !important;
         object-fit: unset !important;
+        opacity: unset !important;
     }
 
 }
+
+.videocontainer.display-name-on-black > video {
+    opacity: unset !important;
+}
+
+.videocontainer__background {
+
+    border-radius: unset !important;
+
+}
+
+
+

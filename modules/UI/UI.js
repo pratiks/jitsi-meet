@@ -330,28 +330,37 @@ UI.getGridLayout = () => {
          * lonely user view
          * **/
         if(numberOfParticipants === 1) {
-            grid = {  "grid-template-columns": `repeat(1, 1fr)` };
+            grid = {  "grid-template-columns": `repeat(1, 1fr)`, "top": "0", "bottom": "0"  };
         }
 
         /**
-         * 2 x 2
+         * 1 x 2
          * **/
-        if(numberOfParticipants >=2 && numberOfParticipants <= 4) {
-            grid = {   "grid-template-columns": `repeat(2, 1fr)` };
+        if(numberOfParticipants === 2) {
+            grid = {  "grid-template-columns": `repeat(2, 1fr)`, "top": "35%", "bottom": "35%"  };
+        }
+
+    // ROWS X COLUMNS
+
+        /**
+         * 1 x 2
+         * **/
+        if(numberOfParticipants >2 && numberOfParticipants <= 4) {
+            grid = {   "grid-template-columns": `repeat(2, 1fr)`, "top": "10%", "bottom": "10%"  };
         }
 
         /**
          * 2 x 3
          * **/
         if(numberOfParticipants >= 5 && numberOfParticipants <= 9) {
-            grid = {   "grid-template-columns": `repeat(3, 1fr)` };
+            grid = {   "grid-template-columns": `repeat(3, 1fr)`, "top": "10%", "bottom": "10%"  };
         }
 
         /**
          * 4 x 4
          * **/
         if(numberOfParticipants > 10 && numberOfParticipants <= 16) {
-            grid = {   "grid-template-columns": `repeat(4, 1fr)` };
+            grid = {   "grid-template-columns": `repeat(4, 1fr),"top": "5%", "bottom": "5%" ` };
         }
 
     $('#filmstripRemoteVideosContainer').css(grid);
