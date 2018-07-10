@@ -350,8 +350,8 @@ UI.getGridLayout = () => {
         /**
          * 4 x 4
          * **/
-        if(numberOfParticipants >10 && numberOfParticipants <= 16) {
-            grid = {   "grid-template-columns": `repeat(3, 2fr)` };
+        if(numberOfParticipants > 10 && numberOfParticipants <= 16) {
+            grid = {   "grid-template-columns": `repeat(4, 1fr)` };
         }
 
     $('#filmstripRemoteVideosContainer').css(grid);
