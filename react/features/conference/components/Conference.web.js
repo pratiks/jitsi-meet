@@ -143,9 +143,19 @@ class Conference extends Component<Props> {
             = filmstripOnly
                 || VIDEO_QUALITY_LABEL_DISABLED
                 || this.props._iAmRecorder;
+        let filmstripClass;
+
+        if (interfaceConfig.TILE_FILMSTRIP) {
+            filmstripClass = 'tile-filmstrip';
+        } else if (interfaceConfig.VERTICAL_FILMSTRIP) {
+            filmstripClass = 'vertical-filmstrip';
+        } else {
+            filmstripClass = 'horizontal-filmstrip';
+        }
 
         return (
             <div
+                className = { filmstripClass }
                 id = 'videoconference_page'
                 onMouseMove = { this._onShowToolbar }>
                 <div id = 'videospace'>

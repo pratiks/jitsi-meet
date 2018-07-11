@@ -2,6 +2,7 @@
 
 const logger = require('jitsi-meet-logger').getLogger(__filename);
 const UI = {};
+
 import Chat from './side_pannels/chat/Chat';
 import SidePanels from './side_pannels/SidePanels';
 import SideContainerToggler from './side_pannels/SideContainerToggler';
@@ -273,12 +274,11 @@ UI.getSharedVideoManager = function() {
  *  //todo
  * */
 UI.loadTileView = () => {
-
-    //todo: update to not add this directly.
-    $('#largeVideoWrapper, #largeBackgroundVideoContainer, #dominantSpeaker').hide();
+    // todo: update to not add this directly.
+    $('#largeVideoWrapper, #largeBackgroundVideoContainer, #dominantSpeaker')
+        .hide();
     $('#localVideoContainer').appendTo('#filmstripRemoteVideosContainer');
     UI.setGrid();
-
 };
 
 /**
@@ -286,22 +286,18 @@ UI.loadTileView = () => {
  * todo
  */
 UI.setGrid = () => {
-    logger.info(`TileView | adjusting grid...`);
+
     const numberOfParticipants = UI.getRemoteVideosCount() + 1;
-    logger.info(`tileView | total number of participants including me is ${numberOfParticipants} `);
+
+    logger.info(`tileViewUpdate Begin | 
+    total number of participants including me is ${numberOfParticipants} `);
+
     const numberOfColumns = Math.ceil(Math.sqrt(numberOfParticipants));
+    const grid = { 'grid-template-columns': `repeat(${numberOfColumns}, 1fr)` };
 
-    /**
-     *    ROWS: Auto flow
-     *
-     *    COLUMNS: Math.ceil(Math.sqrt(numberOfParticipants))
-     *
-     * **/
-    const grid = {  "grid-template-columns": `repeat(${numberOfColumns}, 1fr)`};
-    logger.info(`TileView | adjusting grid complete..`);
+    logger.info('TileViewUpdate End | Completed ');
+
     $('#filmstripRemoteVideosContainer').css(grid);
-
-
 };
 
 
@@ -356,20 +352,12 @@ UI.start = function() {
         // Initialize side panels
         SidePanels.init(eventEmitter);
     }
-    let filmstripTypeClassname;
-    filmstripTypeClassname = interfaceConfig.VERTICAL_FILMSTRIP
-        ? 'vertical-filmstrip' : 'horizontal-filmstrip';
 
-    if (interfaceConfig.TILE_FILMSTRIP)
-    {
-        filmstripTypeClassname = 'tile-filmstrip';
-        $('body').addClass('tile-filmstrip');
+    if (interfaceConfig.TILE_FILMSTRIP) {
         UI.loadTileView();
     }
 
-    $('body').addClass(filmstripTypeClassname);
     document.title = interfaceConfig.APP_NAME;
-
 };
 
 
@@ -404,13 +392,11 @@ UI.bindEvents = () => {
 
     $(window).resize(onResize);
 
-
-
     // Added a new videoContainer
-    $("#filmstripRemoteVideosContainer").on('DOMSubtreeModified', (event) =>
-    {
-        UI.setGrid();
-    });
+    if (interfaceConfig.TILE_FILMSTRIP) {
+        $('#filmstripRemoteVideosContainer')
+            .on('DOMSubtreeModified', UI.setGrid);
+    }
 
 };
 
@@ -713,7 +699,8 @@ UI.removeListener = function(type, listener) {
 UI.emitEvent = (type, ...options) => eventEmitter.emit(type, ...options);
 
 UI.clickOnVideo = function(videoNumber) {
-    const videos = $('#filmstripRemoteVideoContainer .videocontainer:not(#mixedstream)');
+    const videos
+        = $('#filmstripRemoteVideoContainer .videocontainer:not(#mixedstream)');
     const videosLength = videos.length;
 
     if (videosLength <= videoNumber) {
