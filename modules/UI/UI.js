@@ -1,7 +1,6 @@
 /* global APP, $, config, interfaceConfig */
 
 const logger = require('jitsi-meet-logger').getLogger(__filename);
-
 const UI = {};
 import Chat from './side_pannels/chat/Chat';
 import SidePanels from './side_pannels/SidePanels';
@@ -287,52 +286,19 @@ UI.loadTileView = () => {
  * todo
  */
 UI.setGrid = () => {
-    logger.info(`TileView update begin`);
+    logger.info(`TileView | adjusting grid...`);
     const numberOfParticipants = UI.getRemoteVideosCount() + 1;
-
-    let grid;
     logger.info(`tileView | total number of participants including me is ${numberOfParticipants} `);
+    const numberOfColumns = Math.ceil(Math.sqrt(numberOfParticipants));
 
-        /**
-         * lonely user view
-         * **/
-        if(numberOfParticipants === 1) {
-            grid = {  "grid-template-columns": `repeat(1, 1fr)`, "top": "0", "bottom": "0"  };
-        }
-
-        /**
-         * 1 x 2
-         * **/
-        if(numberOfParticipants === 2) {
-            grid = {  "grid-template-columns": `repeat(2, 1fr)`, "top": "20%", "bottom": "20%"  };
-        }
-
-        // ROWS X COLUMNS
-
-        /**
-         * 1 x 2
-         * **/
-        if(numberOfParticipants >2 && numberOfParticipants <= 4) {
-            grid = {   "grid-template-columns": `repeat(2, 1fr)`, "top": "10%", "bottom": "10%"  };
-        }
-
-        /**
-         * 2 x 3
-         * **/
-        if(numberOfParticipants >= 5 && numberOfParticipants <= 9) {
-            grid = {   "grid-template-columns": `repeat(3, 1fr)`, "top": "10%", "bottom": "10%"  };
-        }
-
-        /**
-         * 4 x 4
-         * **/
-        if(numberOfParticipants > 10 && numberOfParticipants <= 16) {
-            grid = {   "grid-template-columns": `repeat(4, 1fr),"top": "5%", "bottom": "5%" ` };
-        }
-
-    logger.info(`TileView update complete`);
-
-
+    /**
+     *    ROWS: Auto flow
+     *
+     *    COLUMNS: Math.ceil(Math.sqrt(numberOfParticipants))
+     *
+     * **/
+    const grid = {  "grid-template-columns": `repeat(${numberOfColumns}, 1fr)`};
+    logger.info(`TileView | adjusting grid complete..`);
     $('#filmstripRemoteVideosContainer').css(grid);
 
 
