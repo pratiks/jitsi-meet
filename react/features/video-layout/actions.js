@@ -1,4 +1,11 @@
-import { TOGGLE_TILE_VIEW } from './actionTypes';
+import { SET_TILE_VIEW, TOGGLE_TILE_VIEW } from './actionTypes';
+
+export function setTileView(enabled) {
+    return {
+        type: SET_TILE_VIEW,
+        enabled
+    };
+}
 
 /**
  * Creates a (redux) action which signals to change the UI layout to enter or

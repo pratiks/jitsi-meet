@@ -1,3 +1,5 @@
+export const SET_TILE_VIEW = Symbol('SET_TILE_VIEW');
+
 /**
  * The type of the action which signals to toggle feature tile view for video
  * thumbnails.

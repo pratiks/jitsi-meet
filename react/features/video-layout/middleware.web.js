@@ -15,6 +15,8 @@ import {
 import { MiddlewareRegistry } from '../base/redux';
 import { TRACK_ADDED } from '../base/tracks';
 
+import { TOGGLE_TILE_VIEW } from './actionTypes';
+
 declare var APP: Object;
 
 /**
@@ -69,6 +71,12 @@ MiddlewareRegistry.register(store => next => action => {
             UIEvents.PINNED_ENDPOINT,
             action.participant.id,
             Boolean(action.participant.id));
+        break;
+
+    case TOGGLE_TILE_VIEW:
+        APP.UI.emitEvent(
+            UIEvents.TOGGLED_TILE_VIEW,
+            store.getState()['features/video-layout'].tileView);
         break;
 
     case TRACK_ADDED:

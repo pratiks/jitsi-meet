@@ -21,6 +21,7 @@ import {
     getPinnedParticipant,
     pinParticipant
 } from '../react/features/base/participants';
+import { setTileView } from '../react/features/video-layout';
 import UIEvents from '../service/UI/UIEvents';
 import VideoLayout from './UI/videolayout/VideoLayout';
 
@@ -114,6 +115,26 @@ class State {
         if (oldValue !== b) {
             this._sharedDocumentVisible = b;
             this._firePropertyChange('sharedDocumentVisible', oldValue, b);
+        }
+    }
+
+    /**
+     * A getter for the local knowledge for if tile view is enabled.
+     */
+    get tileViewEnabled() {
+        return this._tileViewEnabled;
+    }
+
+    /**
+     * A setter for tileViewEnabled. Fires a property change event for other
+     * participants to follow.
+     */
+    set tileViewEnabled(b) {
+        const oldValue = this._tileViewEnabled;
+
+        if (oldValue !== b) {
+            this._tileViewEnabled = b;
+            this._firePropertyChange('tileViewEnabled', oldValue, b);
         }
     }
 
@@ -214,6 +235,10 @@ class FollowMe {
         this.sharedDocEventHandler = this._sharedDocumentToggled.bind(this);
         this._UI.addListener(UIEvents.TOGGLED_SHARED_DOCUMENT,
                             this.sharedDocEventHandler);
+
+        this.tileViewEventHandler = this._tileViewToggled.bind(this);
+        this._UI.addListener(UIEvents.TOGGLED_TILE_VIEW,
+                            this.tileViewEventHandler);
     }
 
     /**
@@ -221,6 +246,8 @@ class FollowMe {
      * @private
      */
     _removeFollowMeListeners() {
+        this._UI.removeListener(UIEvents.TOGGLED_TILE_VIEW,
+                                this.tileViewEventHandler);
         this._UI.removeListener(UIEvents.TOGGLED_FILMSTRIP,
                                 this.filmstripEventHandler);
         this._UI.removeListener(UIEvents.TOGGLED_SHARED_DOCUMENT,
@@ -264,6 +291,16 @@ class FollowMe {
      */
     _sharedDocumentToggled(sharedDocumentVisible) {
         this._local.sharedDocumentVisible = sharedDocumentVisible;
+    }
+
+    /**
+     * Notifies this instance that the tile view mode has been entered or left
+     *
+     * @param {boolean} enabled - True if tile view has been entered, false
+     * if it is not.
+     */
+    _tileViewToggled(enabled) {
+        this._local.tileViewEnabled = enabled;
     }
 
     /**
@@ -316,7 +353,8 @@ class FollowMe {
                     attributes: {
                         filmstripVisible: local.filmstripVisible,
                         nextOnStage: local.nextOnStage,
-                        sharedDocumentVisible: local.sharedDocumentVisible
+                        sharedDocumentVisible: local.sharedDocumentVisible,
+                        tileViewEnabled: local.tileViewEnabled
                     }
                 });
     }
@@ -355,6 +393,7 @@ class FollowMe {
         this._onFilmstripVisible(attributes.filmstripVisible);
         this._onNextOnStage(attributes.nextOnStage);
         this._onSharedDocumentVisible(attributes.sharedDocumentVisible);
+        this._onTileViewEnabled(attributes.tileViewEnabled);
     }
 
     /**
@@ -432,6 +471,20 @@ class FollowMe {
                 this._UI.getSharedDocumentManager().toggleEtherpad();
             }
         }
+    }
+
+    /**
+     * Process a tile view enter / exit event received from FOLLOW-ME.
+     *
+     * @param {boolean} enabled - Whether or not tile view should be shown.
+     * @private
+     */
+    _onTileViewEnabled(enabled) {
+        if (typeof enabled === 'undefined') {
+            return;
+        }
+
+        APP.store.dispatch(setTileView(enabled === 'true'));
     }
 
     /**
