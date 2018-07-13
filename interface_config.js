@@ -48,7 +48,7 @@ var interfaceConfig = {
         'microphone', 'camera', 'desktop', 'fullscreen', 'fodeviceselection', 'hangup',
         'profile', 'info', 'chat', 'recording', 'livestreaming', 'etherpad',
         'sharedvideo', 'settings', 'raisehand', 'videoquality', 'filmstrip',
-        'invite', 'feedback', 'stats', 'shortcuts'
+        'invite', 'feedback', 'stats', 'shortcuts', 'tileview'
     ],
 
     SETTINGS_SECTIONS: [ 'devices', 'language', 'moderator', 'profile' ],
@@ -155,7 +155,15 @@ var interfaceConfig = {
      *
      * @type {boolean}
      */
-    VIDEO_QUALITY_LABEL_DISABLED: false
+    VIDEO_QUALITY_LABEL_DISABLED: false,
+
+    /**
+     * Temporary feature flag to gate access to tile view while it is still in
+     * development.
+     *
+     * @type {boolean}
+     */
+    _TILE_VIEW_ENABLED: false
 
     /**
      * Specify custom URL for downloading android mobile app.

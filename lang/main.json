@@ -34,6 +34,7 @@
         "keyboardShortcuts": "Keyboard shortcuts",
         "raiseHand": "Raise or lower your hand",
         "pushToTalk": "Push to talk",
+        "toggleTileView": "Display video thumbnails {PLACEHOLDER}",
         "toggleScreensharing": "Switch between camera and screen sharing",
         "toggleFilmstrip": "Show or hide video thumbnails",
         "toggleShortcuts": "Show or hide keyboard shortcuts",
@@ -100,6 +101,7 @@
             "shareYourScreen": "Toggle screenshare",
             "shortcuts": "Toggle shortcuts",
             "speakerStats": "Toggle speaker statistics",
+            "tileView": "Toggle tile view",
             "toggleCamera": "Toggle camera",
             "videomute": "Toggle mute video"
         },

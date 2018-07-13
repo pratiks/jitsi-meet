@@ -145,6 +145,16 @@ type Props = {
     _sharingVideo: boolean,
 
     /**
+     * Whether or not switching between tile and singular filmstrip is possible.
+     */
+    _tileViewAvailable: boolean,
+
+    /**
+     * Whether or not tile view is currently displayed.
+     */
+    _tileViewEnabled: boolean,
+
+    /**
      * Flag showing whether toolbar is visible.
      */
     _visible: boolean,
@@ -195,6 +205,8 @@ class Toolbox extends Component<Props> {
             = this._onShortcutToggleRaiseHand.bind(this);
         this._onShortcutToggleScreenshare
             = this._onShortcutToggleScreenshare.bind(this);
+        this._onShortcutToggleTileView
+            = this._onShortcutToggleTileView.bind(this);
 
         this._onToolbarOpenFeedback
             = this._onToolbarOpenFeedback.bind(this);
@@ -218,6 +230,8 @@ class Toolbox extends Component<Props> {
             = this._onToolbarToggleScreenshare.bind(this);
         this._onToolbarToggleSharedVideo
             = this._onToolbarToggleSharedVideo.bind(this);
+        this._onToolbarToggleTileView
+            = this._onToolbarToggleTileView.bind(this);
     }
 
     /**
@@ -247,7 +261,14 @@ class Toolbox extends Component<Props> {
                 character: 'S',
                 exec: this._onShortcutToggleFullScreen,
                 helpDescription: 'keyboardShortcuts.fullScreen'
-            }
+            },
+            this._shouldShowButton('tileView')
+                && this.props._tileViewAvailable
+                && {
+                    character: 'P',
+                    exec: this._onShortcutToggleTileView,
+                    helpDescription: 'keyboardShortcuts.toggleTileView'
+                }
         ];
 
         KEYBOARD_SHORTCUTS.forEach(shortcut => {
@@ -303,6 +324,7 @@ class Toolbox extends Component<Props> {
             _hideInviteButton,
             _overflowMenuVisible,
             _raisedHand,
+            _tileViewAvailable,
             _visible,
             _visibleButtons,
             t
@@ -363,6 +385,9 @@ class Toolbox extends Component<Props> {
                             onClick = { this._onToolbarOpenInvite }
                             tooltip = { t('toolbar.invite') } /> }
                     { this._shouldShowButton('info') && <InfoDialogButton /> }
+                    { this._shouldShowButton('tileview')
+                        && _tileViewAvailable
+                        && this._renderTileViewToggleButton() }
                     { overflowHasItems
                         && <OverflowMenuButton
                             isOpen = { _overflowMenuVisible }
@@ -508,6 +533,19 @@ class Toolbox extends Component<Props> {
         this.props.dispatch(toggleSharedVideo());
     }
 
+    /**
+     * Dispatches an action to toggle between a single line of remote thumbnails
+     * and multiple lines (tiles) of remote thumbnails.
+     *
+     * @private
+     * @returns {void}
+     */
+    _doToggleTileView() {
+        console.warn('Toolbox#_doToggleTileView');
+
+        // this.props.dispatch(toggleTileView());
+    }
+
     _onMouseOut: () => void;
 
     /**
@@ -619,6 +657,22 @@ class Toolbox extends Component<Props> {
             }));
 
         this._doToggleScreenshare();
+    }
+
+    _onShortcutToggleTileView: () => void;
+
+    /**
+     * TODO add doc.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onShortcutToggleTileView() {
+        // TODO add analytics
+
+        console.warn('Toolbox#_onShortcutToggleTileView');
+
+        this._doToggleTileView();
     }
 
     _onToolbarOpenFeedback: () => void;
@@ -824,6 +878,22 @@ class Toolbox extends Component<Props> {
         this._doToggleSharedVideo();
     }
 
+    _onToolbarToggleTileView: () => void;
+
+    /**
+     * Creates an analytics toolbar event and dispatches an action for toggling
+     * between tiled remote videos and a single strip of remote videos.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onToolbarToggleTileView() {
+        // TODO add analytics
+        console.warn('Toolbox#_onToolbarToggleTileView');
+
+        this._doToggleTileView();
+    }
+
     /**
      * Renders a button for toggleing screen sharing.
      *
@@ -960,6 +1030,24 @@ class Toolbox extends Component<Props> {
         ];
     }
 
+    /**
+     * Renders a button for toggling tile view.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _renderTileViewToggleButton() {
+        const tooltip = this.props.t('toolbar.accessibilityLabel.tileView');
+
+        return (
+            <ToolbarButton
+                accessibilityLabel = { tooltip }
+                iconName = { 'icon-full-screen' }
+                onClick = { this._onToolbarToggleTileView }
+                tooltip = { tooltip } />
+        );
+    }
+
     _shouldShowButton: (string) => boolean;
 
     /**
@@ -1043,6 +1131,8 @@ function _mapStateToProps(state) {
         _sharingVideo: sharedVideoStatus === 'playing'
             || sharedVideoStatus === 'start'
             || sharedVideoStatus === 'pause',
+        _tileViewAvailable: Boolean(interfaceConfig._TILE_VIEW_ENABLED),
+        _tileViewEnabled: false,
         _visible: Boolean(timeoutID || visible || alwaysVisible),
 
         // XXX: We are not currently using state here, but in the future, when
