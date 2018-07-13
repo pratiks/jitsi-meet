@@ -52,6 +52,12 @@ type Props = {
     _iAmRecorder: boolean,
 
     /**
+     * A class name to use at the root for the purpose of changing the layout
+     * of children using CSS.
+     */
+    _layoutModeClass: string,
+
+    /**
      * Conference room name.
      */
     _room: string,
@@ -161,6 +167,7 @@ class Conference extends Component<Props> {
 
         return (
             <div
+                className = { this.props._layoutModeClass }
                 id = 'videoconference_page'
                 onMouseMove = { this._onShowToolbar }>
                 <div id = 'videospace'>
@@ -236,24 +243,26 @@ class Conference extends Component<Props> {
  * @private
  * @returns {{
  *     _iAmRecorder: boolean,
+ *     _layoutModeClass: string,
  *     _room: ?string
  * }}
  */
 function _mapStateToProps(state) {
     const { room } = state['features/base/conference'];
     const { iAmRecorder } = state['features/base/config'];
+    let layoutModeClass = '';
+
+    if (state['features/video-layout'].tileView) {
+        layoutModeClass = 'tile-filmstrip';
+    } else if (interfaceConfig.VERTICAL_FILMSTRIP) {
+        layoutModeClass = 'vertical-filmstrip';
+    } else {
+        layoutModeClass = 'horizontal-filmstrip';
+    }
 
     return {
-        /**
-         * Whether the local participant is recording the conference.
-         *
-         * @private
-         */
         _iAmRecorder: iAmRecorder,
-
-        /**
-         * Conference room name.
-         */
+        _layoutModeClass: layoutModeClass,
         _room: room
     };
 }
