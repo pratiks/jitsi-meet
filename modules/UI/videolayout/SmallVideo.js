@@ -547,7 +547,8 @@ SmallVideo.prototype.isVideoPlayable = function() {
  */
 SmallVideo.prototype.selectDisplayMode = function() {
     // Display name is always and only displayed when user is on the stage
-    if (this.isCurrentlyOnLargeVideo()) {
+    if (this.isCurrentlyOnLargeVideo()
+        && !APP.store.getState()['features/video-layout'].tileView) {
         return this.isVideoPlayable() && !APP.conference.isAudioOnly()
             ? DISPLAY_BLACKNESS_WITH_NAME : DISPLAY_AVATAR_WITH_NAME;
     } else if (this.isVideoPlayable()
@@ -623,6 +624,8 @@ SmallVideo.prototype.updateView = function() {
         this.$container.addClass('display-avatar-only');
         break;
     }
+
+    this.$container.toggleClass('active-speaker', this._showDominantSpeaker);
 };
 
 /**
@@ -686,6 +689,7 @@ SmallVideo.prototype.showDominantSpeakerIndicator = function(show) {
     this._showDominantSpeaker = show;
 
     this.updateIndicators();
+    this.updateView();
 };
 
 /**
