@@ -34,6 +34,14 @@ type Props = {
     _hovered: boolean,
 
     /**
+     * The participants in the conference.
+     *
+     * @private
+     */
+    _participants: Array<any>,
+
+
+    /**
      * The redux {@code dispatch} function.
      */
     dispatch: Dispatch<*>
@@ -87,6 +95,9 @@ class Filmstrip extends Component <Props> {
      * @returns {ReactElement}
      */
     render() {
+        const { _className, _filmstripOnly } = this.props;
+        const count = this._calculateTileColumCount();
+
         // Note: Appending of {@code RemoteVideo} views is handled through
         // VideoLayout. The views do not get blown away on render() because
         // ReactDOMComponent is only aware of the given JSX and not new appended
@@ -95,8 +106,8 @@ class Filmstrip extends Component <Props> {
         // modified, then the views will get blown away.
 
         return (
-            <div className = { `filmstrip ${this.props._className}` }>
-                { this.props._filmstripOnly && <Toolbar /> }
+            <div className = { `filmstrip ${_className} col-${count}` }>
+                { _filmstripOnly && <Toolbar /> }
                 <div
                     className = 'filmstrip__videos'
                     id = 'remoteVideos'>
@@ -124,6 +135,26 @@ class Filmstrip extends Component <Props> {
                 </div>
             </div>
         );
+    }
+
+    /**
+     * Returns how many columns the grid layout should display.
+     *
+     * @private
+     * @returns {void}
+     */
+    _calculateTileColumCount() {
+        const count = this.props._participants.length;
+
+        if (count <= 2) {
+            return 1;
+        } else if (count === 3) {
+            return 3;
+        }
+
+        const columnCount = Math.ceil(Math.sqrt(count));
+
+        return Math.min(5, columnCount);
     }
 
     /**
@@ -190,7 +221,8 @@ function _mapStateToProps(state) {
     return {
         _className: className,
         _filmstripOnly: isFilmstripOnly,
-        _hovered: hovered
+        _hovered: hovered,
+        _participants: state['features/base/participants']
     };
 }
 

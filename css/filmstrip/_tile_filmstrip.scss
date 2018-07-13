@@ -27,4 +27,25 @@
     .mainStageVideo {
         display: none !important;
     }
+
+    /**
+     * Temporary style while working with remote video grid.
+     */
+    #filmstripLocalVideoThumbnail {
+        display: none;
+    }
+}
+
+.tile-filmstrip {
+    .filmstrip {
+        align-items: center;
+        display: flex;
+        height: 100%;
+        justify-content: center;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        z-index: $filmstripVideosZ
+    }
 }
