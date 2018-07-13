@@ -1038,12 +1038,15 @@ class Toolbox extends Component<Props> {
      * @returns {ReactElement}
      */
     _renderTileViewToggleButton() {
-        const tooltip = this.props.t('toolbar.accessibilityLabel.tileView');
+        const { _tileViewEnabled, t } = this.props;
+        const tooltip = t('toolbar.accessibilityLabel.tileView');
+        const iconName = `icon-full-screen ${
+            _tileViewEnabled ? 'toggled' : ''}`;
 
         return (
             <ToolbarButton
                 accessibilityLabel = { tooltip }
-                iconName = { 'icon-full-screen' }
+                iconName = { iconName }
                 onClick = { this._onToolbarToggleTileView }
                 tooltip = { tooltip } />
         );
@@ -1133,7 +1136,7 @@ function _mapStateToProps(state) {
             || sharedVideoStatus === 'start'
             || sharedVideoStatus === 'pause',
         _tileViewAvailable: Boolean(interfaceConfig._TILE_VIEW_ENABLED),
-        _tileViewEnabled: false,
+        _tileViewEnabled: state['features/video-layout'].tileView,
         _visible: Boolean(timeoutID || visible || alwaysVisible),
 
         // XXX: We are not currently using state here, but in the future, when
