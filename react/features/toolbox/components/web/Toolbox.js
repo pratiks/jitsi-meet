@@ -39,6 +39,7 @@ import {
 import { toggleSharedVideo } from '../../../shared-video';
 import { toggleChat } from '../../../side-panel';
 import { SpeakerStats } from '../../../speaker-stats';
+import { toggleTileView } from '../../../video-layout';
 import {
     OverflowMenuVideoQualityItem,
     VideoQualityDialog
@@ -262,7 +263,7 @@ class Toolbox extends Component<Props> {
                 exec: this._onShortcutToggleFullScreen,
                 helpDescription: 'keyboardShortcuts.fullScreen'
             },
-            this._shouldShowButton('tileView')
+            this._shouldShowButton('tileview')
                 && this.props._tileViewAvailable
                 && {
                     character: 'P',
@@ -543,7 +544,7 @@ class Toolbox extends Component<Props> {
     _doToggleTileView() {
         console.warn('Toolbox#_doToggleTileView');
 
-        // this.props.dispatch(toggleTileView());
+        this.props.dispatch(toggleTileView());
     }
 
     _onMouseOut: () => void;

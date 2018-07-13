@@ -1,6 +1,6 @@
 /**
- * The type of the action which signals the keyboard shortcuts dialog should
- * be displayed.
+ * The type of the action which signals to change the UI layout to enter or exit
+ * tiled video thumbnail view.
  *
  * {
  *     type: OPEN_KEYBOARD_SHORTCUTS_DIALOG
