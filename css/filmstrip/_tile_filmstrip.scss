@@ -1,0 +1,30 @@
+.tile-filmstrip {
+
+    /**
+     * Hide features that should not be visible while in tile view.
+     */
+    #dominantSpeaker,
+    #videoResolutionLabel,
+    .filmstrip__toolbar {
+        display: none;
+    }
+
+    /**
+     * Width is set with an inline style javascript to adjust for the vertical
+     * in filmstrip. Use !important so it always takes up the full screen
+     * because the filmstrip will not be there to overlap etherpad.
+     *
+     * FIXME: change layout so the width can resize automatically instead of
+     * need javascript.
+     */
+    #etherpadIFrame {
+        width: 100% !important;
+    }
+
+    /**
+     * Display block is set in javascript. TODO: does it need to be set?
+     */
+    .mainStageVideo {
+        display: none !important;
+    }
+}

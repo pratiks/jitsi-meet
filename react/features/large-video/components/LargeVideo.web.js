@@ -49,7 +49,7 @@ export default class LargeVideo extends Component<*> {
                 </div>
                 <div id = 'remotePresenceMessage' />
                 <span id = 'remoteConnectionMessage' />
-                <div>
+                <div className = 'mainStageVideo'>
                     <div id = 'largeVideoBackgroundContainer' />
                     {
 
