@@ -10,6 +10,13 @@
     }
 
     /**
+     * TODO Background color gets sets inline by javascript. Stop doing that.
+     */
+    #largeVideoContainer {
+        background-color: $defaultBackground !important;
+    }
+
+    /**
      * Width is set with an inline style javascript to adjust for the vertical
      * in filmstrip. Use !important so it always takes up the full screen
      * because the filmstrip will not be there to overlap etherpad.
@@ -29,11 +36,29 @@
     }
 
     /**
+     * The show-inline class has !important... Either don't use it or remove
+     * its !important.
+     */
+    #dominantspeakerindicator {
+        display: none !important;
+    }
+
+
+    /**
      * Temporary style while working with remote video grid.
      */
     #filmstripLocalVideoThumbnail {
         display: none;
     }
+
+    /**
+     * TODO: find right place for this message.
+     */
+    #localConnectionMessage {
+        top: 10px;
+        z-index: $filmstripVideosZ + 1;
+    }
+
 }
 
 .tile-filmstrip {
