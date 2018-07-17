@@ -60,6 +60,12 @@
         z-index: $filmstripVideosZ + 1;
     }
 
+    /**
+     * Do not hide filmstrip in tile view.
+     */
+    .filmstrip__videos.hidden {
+        display: block;
+    }
 }
 
 .tile-filmstrip {
