@@ -27,6 +27,7 @@ import {
     RaisedHandIndicator,
     VideoMutedIndicator
 } from '../../../react/features/filmstrip';
+import { shouldDisplayTileView } from '../../../react/features/video-layout';
 /* eslint-enable no-unused-vars */
 
 const logger = require('jitsi-meet-logger').getLogger(__filename);
@@ -548,7 +549,7 @@ SmallVideo.prototype.isVideoPlayable = function() {
 SmallVideo.prototype.selectDisplayMode = function() {
     // Display name is always and only displayed when user is on the stage
     if (this.isCurrentlyOnLargeVideo()
-        && !APP.store.getState()['features/video-layout'].tileView) {
+        && !shouldDisplayTileView(APP.store.getState())) {
         return this.isVideoPlayable() && !APP.conference.isAudioOnly()
             ? DISPLAY_BLACKNESS_WITH_NAME : DISPLAY_AVATAR_WITH_NAME;
     } else if (this.isVideoPlayable()

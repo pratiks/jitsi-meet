@@ -6,6 +6,7 @@ import {
 } from '../analytics';
 import { _handleParticipantError } from '../base/conference';
 import { MEDIA_TYPE } from '../base/media';
+import { shouldDisplayTileView } from '../video-layout';
 
 import {
     SELECT_LARGE_VIDEO_PARTICIPANT,
@@ -26,7 +27,7 @@ export function selectParticipant() {
 
         if (conference) {
             const largeVideo = state['features/large-video'];
-            const id = state['features/video-layout'].tileView
+            const id = shouldDisplayTileView(state)
                 ? null : largeVideo.participantId;
 
             try {

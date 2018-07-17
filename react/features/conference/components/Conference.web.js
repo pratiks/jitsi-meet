@@ -19,6 +19,7 @@ import {
     setToolboxAlwaysVisible,
     showToolbox
 } from '../../toolbox';
+import { shouldDisplayTileView } from '../../video-layout';
 
 import { maybeShowSuboptimalExperienceNotification } from '../functions';
 
@@ -252,7 +253,7 @@ function _mapStateToProps(state) {
     const { iAmRecorder } = state['features/base/config'];
     let layoutModeClass = '';
 
-    if (state['features/video-layout'].tileView) {
+    if (shouldDisplayTileView(state)) {
         layoutModeClass = 'tile-filmstrip';
     } else if (interfaceConfig.VERTICAL_FILMSTRIP) {
         layoutModeClass = 'vertical-filmstrip';
