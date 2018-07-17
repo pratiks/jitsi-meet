@@ -12,10 +12,9 @@ import {
     PIN_PARTICIPANT,
     getParticipantById
 } from '../base/participants';
-import { MiddlewareRegistry } from '../base/redux';
+import { MiddlewareRegistry, StateListenerRegistry } from '../base/redux';
 import { TRACK_ADDED } from '../base/tracks';
-
-import { TOGGLE_TILE_VIEW } from './actionTypes';
+import { selectParticipant } from '../large-video';
 
 declare var APP: Object;
 
@@ -73,12 +72,6 @@ MiddlewareRegistry.register(store => next => action => {
             Boolean(action.participant.id));
         break;
 
-    case TOGGLE_TILE_VIEW:
-        APP.UI.emitEvent(
-            UIEvents.TOGGLED_TILE_VIEW,
-            store.getState()['features/video-layout'].tileView);
-        break;
-
     case TRACK_ADDED:
         if (!action.track.local) {
             VideoLayout.onRemoteStreamAdded(action.track.jitsiTrack);
@@ -89,3 +82,23 @@ MiddlewareRegistry.register(store => next => action => {
 
     return result;
 });
+
+/**
+ * StateListenerRegistry provides a reliable way to detect the leaving of a
+ * conference, where we need to clean up the recording sessions.
+ */
+StateListenerRegistry.register(
+    /* selector */ state => state['features/video-layout'],
+    /* listener */ (currentState, store, previousState = {}) => {
+        if (currentState.tileView === previousState.tileView) {
+            return;
+        }
+
+        APP.UI.emitEvent(
+            UIEvents.TOGGLED_TILE_VIEW,
+            currentState.tileView);
+
+        // Make sure to null out or select participant on change.
+        store.dispatch(selectParticipant());
+    }
+);

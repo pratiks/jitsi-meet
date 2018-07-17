@@ -26,7 +26,8 @@ export function selectParticipant() {
 
         if (conference) {
             const largeVideo = state['features/large-video'];
-            const id = largeVideo.participantId;
+            const id = state['features/video-layout'].tileView
+                ? null : largeVideo.participantId;
 
             try {
                 conference.selectParticipant(id);
