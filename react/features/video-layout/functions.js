@@ -24,5 +24,6 @@ export function shouldDisplayTileView(state: Object) {
     return Boolean(
         state['features/video-layout'].tileView
             && getParticipantCount(state) > 2
+            && !state['features/etherpad'].editing
     );
 }
