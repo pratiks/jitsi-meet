@@ -36,6 +36,7 @@ import {
     SET_AUDIO_ONLY,
     SET_DESKTOP_SHARING_ENABLED,
     SET_FOLLOW_ME,
+    SET_INTERNAL_RECEIVE_VIDEO_QUALITY_MAX,
     SET_LASTN,
     SET_PASSWORD,
     SET_PASSWORD_FAILED,
@@ -518,6 +519,24 @@ export function setDesktopSharingEnabled(desktopSharingEnabled: boolean) {
     return {
         type: SET_DESKTOP_SHARING_ENABLED,
         desktopSharingEnabled
+    };
+}
+
+/**
+ * Sets the maximum video quality that should be respected regardless of the
+ * user setting.
+ *
+ * @param {number} max - The maximum video height that should be received from
+ * remote participants.
+ * @returns {{
+ *     type: SET_INTERNAL_RECEIVE_VIDEO_QUALITY_MAX,
+ *     max: number
+ * }}
+ */
+export function setInternalReceiveVideoQualityMax(max: number) {
+    return {
+        type: SET_INTERNAL_RECEIVE_VIDEO_QUALITY_MAX,
+        max
     };
 }
 

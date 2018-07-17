@@ -143,6 +143,17 @@ export const SET_DESKTOP_SHARING_ENABLED
 export const SET_FOLLOW_ME = Symbol('SET_FOLLOW_ME');
 
 /**
+ * The type of blah. Complete this.
+ *
+ * {
+ *     type: SET_INTERNAL_RECEIVE_VIDEO_QUALITY_MAX,
+ *     max: number
+ * }
+ */
+export const SET_INTERNAL_RECEIVE_VIDEO_QUALITY_MAX
+    = Symbol('SET_INTERNAL_RECEIVE_VIDEO_QUALITY_MAX');
+
+/**
  * The type of (redux) action which sets the video channel's lastN (value).
  *
  * {

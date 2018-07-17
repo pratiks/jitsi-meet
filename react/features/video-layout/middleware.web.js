@@ -3,7 +3,11 @@
 import VideoLayout from '../../../modules/UI/videolayout/VideoLayout.js';
 import UIEvents from '../../../service/UI/UIEvents';
 
-import { CONFERENCE_JOINED } from '../base/conference';
+import {
+    CONFERENCE_JOINED,
+    VIDEO_QUALITY_LEVELS,
+    setInternalReceiveVideoQualityMax
+} from '../base/conference';
 import {
     DOMINANT_SPEAKER_CHANGED,
     PARTICIPANT_JOINED,
@@ -100,5 +104,10 @@ StateListenerRegistry.register(
 
         // Make sure to null out or select participant on change.
         store.dispatch(selectParticipant());
+
+        if (!currentState.tileView) {
+            store.dispatch(
+                setInternalReceiveVideoQualityMax(VIDEO_QUALITY_LEVELS.HIGH));
+        }
     }
 );

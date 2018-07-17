@@ -17,6 +17,7 @@ import {
     SET_AUDIO_ONLY,
     SET_DESKTOP_SHARING_ENABLED,
     SET_FOLLOW_ME,
+    SET_INTERNAL_RECEIVE_VIDEO_QUALITY_MAX,
     SET_PASSWORD,
     SET_RECEIVE_VIDEO_QUALITY,
     SET_ROOM,
@@ -71,6 +72,9 @@ ReducerRegistry.register('features/base/conference', (state = {}, action) => {
 
     case SET_PASSWORD:
         return _setPassword(state, action);
+
+    case SET_INTERNAL_RECEIVE_VIDEO_QUALITY_MAX:
+        return _setInteralReceiveVideQualityMax(state, action);
 
     case SET_RECEIVE_VIDEO_QUALITY:
         return _setReceiveVideoQuality(state, action);
@@ -349,6 +353,21 @@ function _setAudioOnly(state, action) {
  */
 function _setDesktopSharingEnabled(state, action) {
     return set(state, 'desktopSharingEnabled', action.desktopSharingEnabled);
+}
+
+/**
+ * Reduces a specific Redux action SET_INTERNAL_RECEIVE_VIDEO_QUALITY_MAX of the
+ * feature base/conference.
+ *
+ * @param {Object} state - The Redux state of the feature base/conference.
+ * @param {Action} action - The Redux action SET_DESKTOP_SHARING_ENABLED to
+ * reduce.
+ * @private
+ * @returns {Object} The new state of the feature base/conference after the
+ * reduction of the specified action.
+ */
+function _setInteralReceiveVideQualityMax(state, action) {
+    return set(state, 'internalVideoQualityMax', action.max);
 }
 
 /**

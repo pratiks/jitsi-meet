@@ -39,7 +39,7 @@ import {
 import { toggleSharedVideo } from '../../../shared-video';
 import { toggleChat } from '../../../side-panel';
 import { SpeakerStats } from '../../../speaker-stats';
-import { isTileViewEnabled, toggleTileView } from '../../../video-layout';
+import { isTileViewEnabled, setTileView } from '../../../video-layout';
 import {
     OverflowMenuVideoQualityItem,
     VideoQualityDialog
@@ -542,9 +542,9 @@ class Toolbox extends Component<Props> {
      * @returns {void}
      */
     _doToggleTileView() {
-        console.warn('Toolbox#_doToggleTileView');
+        const { _tileViewEnabled } = this.props;
 
-        this.props.dispatch(toggleTileView());
+        this.props.dispatch(setTileView(!_tileViewEnabled));
     }
 
     _onMouseOut: () => void;

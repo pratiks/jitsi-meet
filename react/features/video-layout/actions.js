@@ -1,4 +1,4 @@
-import { SET_TILE_VIEW, TOGGLE_TILE_VIEW } from './actionTypes';
+import { SET_TILE_VIEW } from './actionTypes';
 
 /**
  * Creates a (redux) action which signals to set the UI layout to be tiled view
@@ -16,18 +16,3 @@ export function setTileView(enabled) {
         enabled
     };
 }
-
-/**
- * Creates a (redux) action which signals to change the UI layout to enter or
- * exit tiled video thumbnail view.
- *
- * @returns {{
- *     type: TOGGLE_TILE_VIEW
- * }}
- */
-export function toggleTileView() {
-    return {
-        type: TOGGLE_TILE_VIEW
-    };
-}
-

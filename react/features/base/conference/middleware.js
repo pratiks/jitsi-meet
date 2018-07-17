@@ -33,6 +33,7 @@ import {
     CONFERENCE_JOINED,
     DATA_CHANNEL_OPENED,
     SET_AUDIO_ONLY,
+    SET_INTERNAL_RECEIVE_VIDEO_QUALITY_MAX,
     SET_LASTN,
     SET_RECEIVE_VIDEO_QUALITY,
     SET_ROOM
@@ -79,6 +80,9 @@ MiddlewareRegistry.register(store => next => action => {
 
     case SET_LASTN:
         return _setLastN(store, next, action);
+
+    case SET_INTERNAL_RECEIVE_VIDEO_QUALITY_MAX:
+        return _setInternalReceiveVideoQualityMax(store, next, action);
 
     case SET_RECEIVE_VIDEO_QUALITY:
         return _setReceiveVideoQuality(store, next, action);
@@ -434,6 +438,34 @@ function _setLastN({ getState }, next, action) {
 }
 
 /**
+ * Sets the maximum receive video quality that should be respected regardless
+ * of user setting.
+ *
+ * @param {Store} store - The redux store in which the specified {@code action}
+ * is being dispatched.
+ * @param {Dispatch} next - The redux {@code dispatch} function to dispatch the
+ * specified {@code action} to the specified {@code store}.
+ * @param {Action} action - The redux action {@code SET_RECEIVE_VIDEO_QUALITY}
+ * which is being dispatched in the specified {@code store}.
+ * @private
+ * @returns {Object} The value returned by {@code next(action)}.
+ */
+function _setInternalReceiveVideoQualityMax({ getState }, next, action) {
+    let qualityTarget = action.max;
+
+    const { receiveVideoQuality } = getState()['features/base/conference'];
+
+    if (typeof receiveVideoQuality !== 'undefined') {
+        qualityTarget = Math.min(receiveVideoQuality, qualityTarget);
+    }
+    const { conference } = getState()['features/base/conference'];
+
+    conference.setReceiverVideoConstraint(qualityTarget);
+
+    return next(action);
+}
+
+/**
  * Sets the maximum receive video quality and will turn off audio only mode if
  * enabled.
  *
@@ -446,11 +478,21 @@ function _setLastN({ getState }, next, action) {
  * @private
  * @returns {Object} The value returned by {@code next(action)}.
  */
-function _setReceiveVideoQuality({ dispatch, getState }, next, action) {
-    const { audioOnly, conference } = getState()['features/base/conference'];
+function _setReceiveVideoQuality({ getState, dispatch }, next, action) {
+    const {
+        audioOnly,
+        conference,
+        internalVideoQualityMax
+    } = getState()['features/base/conference'];
+
+    let qualityTarget = action.receiveVideoQuality;
+
+    if (typeof internalVideoQualityMax !== 'undefined') {
+        qualityTarget = Math.min(internalVideoQualityMax, qualityTarget);
+    }
 
     if (conference) {
-        conference.setReceiverVideoConstraint(action.receiveVideoQuality);
+        conference.setReceiverVideoConstraint(qualityTarget);
         audioOnly && dispatch(toggleAudioOnly());
     }
 
