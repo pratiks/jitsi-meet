@@ -367,6 +367,9 @@ class Toolbox extends Component<Props> {
                                 tooltip = { t('toolbar.chat') } />
                             <ChatCounter />
                         </div> }
+                    { this._shouldShowButton('tileview')
+                        && _tileViewAvailable
+                        && this._renderTileViewToggleButton() }
                 </div>
                 <div className = 'button-group-center'>
                     <AudioMuteButton
@@ -386,9 +389,6 @@ class Toolbox extends Component<Props> {
                             onClick = { this._onToolbarOpenInvite }
                             tooltip = { t('toolbar.invite') } /> }
                     { this._shouldShowButton('info') && <InfoDialogButton /> }
-                    { this._shouldShowButton('tileview')
-                        && _tileViewAvailable
-                        && this._renderTileViewToggleButton() }
                     { overflowHasItems
                         && <OverflowMenuButton
                             isOpen = { _overflowMenuVisible }
@@ -1040,8 +1040,8 @@ class Toolbox extends Component<Props> {
     _renderTileViewToggleButton() {
         const { _tileViewEnabled, t } = this.props;
         const tooltip = t('toolbar.accessibilityLabel.tileView');
-        const iconName = `icon-full-screen ${
-            _tileViewEnabled ? 'toggled' : ''}`;
+        const iconName = _tileViewEnabled
+            ? 'icon-tiles-one toggled' : 'icon-tiles-many';
 
         return (
             <ToolbarButton
