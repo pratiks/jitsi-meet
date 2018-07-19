@@ -39,7 +39,7 @@ import {
 import { toggleSharedVideo } from '../../../shared-video';
 import { toggleChat } from '../../../side-panel';
 import { SpeakerStats } from '../../../speaker-stats';
-import { isTileViewEnabled, setTileView } from '../../../video-layout';
+import { setTileView, shouldDisplayTileView } from '../../../video-layout';
 import {
     OverflowMenuVideoQualityItem,
     VideoQualityDialog
@@ -1136,7 +1136,7 @@ function _mapStateToProps(state) {
             || sharedVideoStatus === 'start'
             || sharedVideoStatus === 'pause',
         _tileViewAvailable: Boolean(interfaceConfig._TILE_VIEW_ENABLED),
-        _tileViewEnabled: isTileViewEnabled(state),
+        _tileViewEnabled: shouldDisplayTileView(state),
         _visible: Boolean(timeoutID || visible || alwaysVisible),
 
         // XXX: We are not currently using state here, but in the future, when

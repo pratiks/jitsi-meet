@@ -9,6 +9,8 @@ import { dockToolbox } from '../../../toolbox';
 import { setFilmstripHovered } from '../../actions';
 import { shouldRemoteVideosBeVisible } from '../../functions';
 import Toolbar from './Toolbar';
+import { shouldDisplayTileView } from "../../../video-layout";
+
 
 declare var interfaceConfig: Object;
 
@@ -40,6 +42,12 @@ type Props = {
      */
     _participants: Array<any>,
 
+    /**
+     * Whether tileView is enabled.
+     *
+     * @private
+     */
+    _tileViewState: boolean,
 
     /**
      * The redux {@code dispatch} function.
@@ -95,8 +103,10 @@ class Filmstrip extends Component <Props> {
      * @returns {ReactElement}
      */
     render() {
-        const { _className, _filmstripOnly } = this.props;
-        const count = this._calculateTileColumCount();
+        const { _className, _filmstripOnly, _tileViewState } = this.props;
+
+        // Sets tileViewStyle for grid
+        const tileViewStyle = (_tileViewState) ? this._getTileViewStyles() : {};
 
         // Note: Appending of {@code RemoteVideo} views is handled through
         // VideoLayout. The views do not get blown away on render() because
@@ -105,36 +115,59 @@ class Filmstrip extends Component <Props> {
         // will get updated without replacing the DOM. If the known DOM gets
         // modified, then the views will get blown away.
 
-        return (
-            <div className = { `filmstrip ${_className} col-${count}` }>
-                { _filmstripOnly && <Toolbar /> }
+        return <div className={`filmstrip ${_className}`}>
+            {_filmstripOnly && <Toolbar/>}
+            <div
+                className='filmstrip__videos'
+                id='remoteVideos'>
                 <div
-                    className = 'filmstrip__videos'
-                    id = 'remoteVideos'>
-                    <div
-                        className = 'filmstrip__videos'
-                        id = 'filmstripLocalVideo'
-                        onMouseOut = { this._onMouseOut }
-                        onMouseOver = { this._onMouseOver }>
-                        <div id = 'filmstripLocalVideoThumbnail' />
-                    </div>
-                    <div
-                        className = 'filmstrip__videos'
-                        id = 'filmstripRemoteVideos'>
-                        {/*
+                    className='filmstrip__videos'
+                    id='filmstripLocalVideo'
+                    onMouseOut={this._onMouseOut}
+                    onMouseOver={this._onMouseOver}>
+                    <div id='filmstripLocalVideoThumbnail'/>
+                </div>
+                <div
+                    className='filmstrip__videos'
+                    id='filmstripRemoteVideos'>
+                    {/*
                           * XXX This extra video container is needed for
                           * scrolling thumbnails in Firefox; otherwise, the flex
                           * thumbnails resize instead of causing overflow.
                           */}
-                        <div
-                            className = 'remote-videos-container'
-                            id = 'filmstripRemoteVideosContainer'
-                            onMouseOut = { this._onMouseOut }
-                            onMouseOver = { this._onMouseOver } />
-                    </div>
+                    <div
+                        className={`filmstrip`}
+                        id='filmstripRemoteVideosContainer'
+                        onMouseOut={this._onMouseOut}
+                        onMouseOver={this._onMouseOver}
+                        style= {tileViewStyle}
+                    />
                 </div>
             </div>
-        );
+        </div>;
+    }
+
+    _getTileViewStyles() {
+        const columnCount = this._calculateTileColumnCount();
+
+        return  {
+            marginTop: '100px',
+            display: 'flex',
+            flexWrap: 'wrap'
+        };
+
+    }
+
+
+    /**
+     * Returns how many columns the grid layout should display.
+     *
+     * @private
+     * @returns {void}
+     */
+    _calculateTileColumnCount() {
+        const count = this.props._participants.length;
+        return  Math.ceil(Math.sqrt(count));
     }
 
     /**
@@ -143,7 +176,7 @@ class Filmstrip extends Component <Props> {
      * @private
      * @returns {void}
      */
-    _calculateTileColumCount() {
+    _calculateCurrentWindowSize() {
         const count = this.props._participants.length;
 
         if (count <= 2) {
@@ -156,6 +189,8 @@ class Filmstrip extends Component <Props> {
 
         return Math.min(5, columnCount);
     }
+
+
 
     /**
      * If the current hover state does not match the known hover state in redux,
@@ -208,21 +243,27 @@ class Filmstrip extends Component <Props> {
  * }}
  */
 function _mapStateToProps(state) {
+    let className;
     const { hovered } = state['features/filmstrip'];
     const isFilmstripOnly = Boolean(interfaceConfig.filmStripOnly);
     const reduceHeight = !isFilmstripOnly
         && state['features/toolbox'].visible
         && interfaceConfig.TOOLBAR_BUTTONS.length;
     const remoteVideosVisible = shouldRemoteVideosBeVisible(state);
+    const tileViewState = shouldDisplayTileView(state);
 
-    const className = `${remoteVideosVisible ? '' : 'hide-videos'} ${
-        reduceHeight ? 'reduce-height' : ''}`;
+    if(tileViewState) {
+        className = 'tile-filmstrip';
+    }
+    else {className = `${remoteVideosVisible ? '' : 'hide-videos'} ${
+        reduceHeight ? 'reduce-height' : ''}`;}
 
     return {
         _className: className,
         _filmstripOnly: isFilmstripOnly,
         _hovered: hovered,
-        _participants: state['features/base/participants']
+        _participants: state['features/base/participants'],
+        _tileViewState: tileViewState
     };
 }
 

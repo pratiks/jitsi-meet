@@ -1,3 +1,4 @@
+/* @flow */
 import { SET_TILE_VIEW } from './actionTypes';
 
 /**
@@ -10,7 +11,7 @@ import { SET_TILE_VIEW } from './actionTypes';
  *     enabled: boolean
  * }}
  */
-export function setTileView(enabled) {
+export function setTileView(enabled: boolean) {
     return {
         type: SET_TILE_VIEW,
         enabled

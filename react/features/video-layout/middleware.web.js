@@ -103,6 +103,8 @@ StateListenerRegistry.register(
             currentState.tileView);
 
         // Make sure to null out or select participant on change.
+        // This tells bridge we do not want HD from any participants.
+        // todo: verify we want to receive quality N based on the size of the tiles, this is in the future.
         store.dispatch(selectParticipant());
 
         if (!currentState.tileView) {
