@@ -18,24 +18,49 @@ declare var APP: Object;
  */
 type Props = {
 
+    /**
+     * Array object that stores chat messages.
+     */
     _messages: Object,
 
+    /**
+     * Conference object from redux state.
+     */
     _conference: Object,
 
+    /**
+     * Room name to join to.
+     */
     _room: Object,
 
+    /**
+     * The participants in the conference.
+     */
     _participants: Object,
 
+    /**
+     * Boolean value that indicates if chat panel is open
+     */
     _panelStatus: Boolean,
 
+    /**
+     * Boolean value that indicates if smiley panel is open
+     */
     _smileyPanelStatus: Boolean,
 
-    _current: String,
-
+    /**
+     * The current user's id
+     */
     _localUserId: String,
 
+    /**
+     * The local user's display name
+     */
     _localDisplayName: String,
 
+    /**
+     * The Redux dispatch function.
+     */
     dispatch: Function,
 
 }
@@ -169,7 +194,7 @@ class SidePanel extends Component<Props, State> {
         });
 
 
-        this._onToggleSmiley();
+        this.props.dispatch(this._onToggleSmiley);
 
     }
 
@@ -378,7 +403,6 @@ function _mapStateToProps(state) {
 
     const {
         panelStatus,
-        current,
         smileyPanelStatus
     } = state['features/side-panel'];
 
@@ -392,7 +416,6 @@ function _mapStateToProps(state) {
         _participants: participants,
         _panelStatus: panelStatus,
         _smileyPanelStatus: smileyPanelStatus,
-        _current: current,
         _localUserId: localUserId,
         _localDisplayName: localDisplayName
     };

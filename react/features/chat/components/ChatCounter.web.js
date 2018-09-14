@@ -7,10 +7,19 @@ import { markAllRead } from './../actions';
 
 type Props = {
 
+    /**
+     * Boolean value that indicates if chat panel is open
+     */
     _panelStatus: Boolean,
 
+    /**
+     * The Redux dispatch function.
+     */
     dispatch: Function,
 
+    /**
+     * The number of messages
+     */
     _count: number,
 
 }
