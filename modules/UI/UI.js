@@ -14,6 +14,7 @@ import VideoLayout from './videolayout/VideoLayout';
 import Filmstrip from './videolayout/Filmstrip';
 
 import { JitsiTrackErrors } from '../../react/features/base/lib-jitsi-meet';
+import { isSidePanelOpen } from '../../react/features/side-panel/functions';
 import {
     getLocalParticipant,
     showParticipantJoinedNotification
@@ -494,6 +495,11 @@ UI.toggleFilmstrip = function() {
  * @returns {true} if the filmstrip is currently visible, and false otherwise.
  */
 UI.isFilmstripVisible = () => Filmstrip.isFilmstripVisible();
+
+/**
+ * @returns {true} if the chat panel is currently visible, and false otherwise.
+ */
+UI.isChatVisible = () => isSidePanelOpen(APP.store.getState());
 
 /**
  * Toggles chat panel. Although React is currently renders chat, leave this
